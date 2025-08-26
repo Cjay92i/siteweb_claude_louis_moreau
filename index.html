@@ -1,208 +1,322 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Site Claude Louis Moreau</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    /* RESET */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galerie d'art maritime | Peintures minimalistes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
 
-    body {
-      font-family: Arial, sans-serif;
-      font-size: 1rem;
-      line-height: 1.5;
-      background: #fafafa;
-      color: #222;
-    }
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8f5f2;
+            color: #333;
+        }
 
-    header {
-      background: #333;
-      color: #fff;
-      padding: 20px 0;
-      text-align: center;
-    }
+        .hero-image {
+            background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('images/hero.jpg');
+            background-size: cover;
+            background-position: center;
+        }
 
-    nav {
-      margin-top: 10px;
-    }
+        .artwork-hover:hover .artwork-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 10px;
-      font-weight: bold;
-      transition: color 0.2s;
-    }
-    nav a:hover {
-      color: #ffbb00;
-    }
+        .artwork-info {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
 
-    .hero-image {
-      width: 100%;
-      min-height: 350px;
-      background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('images/hero.jpg');
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      position: relative;
-      text-align: center;
-    }
+        .nav-link {
+            position: relative;
+        }
 
-    .hero-image h1 {
-      font-size: 2.5em;
-      text-shadow: 1px 1px 7px #000;
-      padding: 20px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 10px;
-      display: inline-block;
-    }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background-color: #333;
+            transition: width 0.3s ease;
+        }
 
-    main {
-      width: 90%;
-      max-width: 1000px;
-      margin: 40px auto 20px auto;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px #0001;
-      padding: 30px 20px;
-    }
+        .nav-link:hover:after {
+            width: 100%;
+        }
 
-    section {
-      margin-bottom: 30px;
-    }
+        .cursor-pointer { cursor: pointer; }
 
-    h2 {
-      color: #1e3d7c;
-      margin-bottom: 15px;
-      font-size: 2em;
-    }
-    p {
-      margin-bottom: 15px;
-      font-size: 1.1em;
-    }
+        /* Modal / Popup */
+        #myModal {
+            position: fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background-color: rgba(0,0,0,0.7);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            opacity:0;
+            pointer-events:none;
+            transition: opacity 0.3s ease;
+            z-index:50;
+        }
 
-    /* Exemple de galerie responsive */
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      justify-content: center;
-    }
-    .gallery img {
-      max-width: 220px;
-      width: 100%;
-      border-radius: 6px;
-      box-shadow: 0 2px 8px #0002;
-      transition: transform 0.2s;
-    }
-    .gallery img:hover {
-      transform: scale(1.05);
-    }
+        #myModal.show {
+            opacity:1;
+            pointer-events:auto;
+        }
 
-    footer {
-      background: #222;
-      color: #fff;
-      text-align: center;
-      padding: 18px 0;
-      margin-top: 40px;
-    }
+        #modalImage {
+            max-width:90%;
+            max-height:80%;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            opacity:0;
+        }
 
-    /* Responsive design */
-    @media (max-width: 900px) {
-      main {
-        padding: 15px 5px;
-      }
-      .gallery {
-        gap: 8px;
-      }
-      .gallery img {
-        max-width: 48vw;
-      }
-    }
-    @media (max-width: 600px) {
-      .hero-image {
-        min-height: 160px;
-        padding: 20px 0;
-      }
-      .hero-image h1 {
-        font-size: 1.3em;
-        padding: 10px;
-      }
-      nav {
-        font-size: 0.95em;
-      }
-      main {
-        padding: 6px 2vw;
-      }
-      h2 {
-        font-size: 1.35em;
-      }
-      .gallery {
-        flex-direction: column;
-        gap: 10px;
-      }
-      .gallery img {
-        max-width: 100%;
-      }
-    }
-  </style>
+        /* Slide-in effect */
+        .gallery-slide, .tableau-slide {
+            transform: translateY(50px);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .gallery-slide.show, .tableau-slide.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Artist image doubled size */
+        .artist-image {
+            width: 200%; 
+            height: auto;
+        }
+
+        /* Hover effect for images */
+        .gallery-slide:hover, .tableau-slide:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Claude Louis Moreau</h1>
-    <nav>
-      <a href="#biographie">Biographie</a>
-      <a href="#oeuvres">Œuvres</a>
-      <a href="#galerie">Galerie</a>
-      <a href="#contact">Contact</a>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm py-4 px-6 md:px-12 flex justify-between items-center">
+        <div class="text-xl font-light tracking-wider">Le temps d'un rêve</div>
+        <div class="hidden md:flex space-x-8 items-center">
+            <a href="#tableaux" class="nav-link text-sm">Tableaux disponibles</a>
+            <a href="#galerie" class="nav-link text-sm">Galerie</a>
+            <a href="#a-propos" class="nav-link text-sm">Artiste</a>
+            <a href="#contact" class="nav-link text-sm">Contact</a>
+            <a href="https://www.instagram.com/" target="_blank" class="flex items-center space-x-1 text-sm">
+                <img src="images/instagram.png" alt="Instagram" class="w-5 h-5">
+                <span>Instagram</span>
+            </a>
+        </div>
     </nav>
-  </header>
 
-  <div class="hero-image">
-    <h1>Bienvenue sur le site consacré à Claude Louis Moreau</h1>
-  </div>
-
-  <main>
-    <section id="biographie">
-      <h2>Biographie</h2>
-      <p>
-        <!-- Remplace ce texte par la vraie biographie -->
-        Claude Louis Moreau était un artiste célèbre pour ses œuvres inspirantes. Découvrez son parcours, ses influences et ses réalisations majeures.
-      </p>
+    <!-- Hero Section -->
+    <section class="hero-image h-96 flex items-center justify-center text-center text-white">
+        <div class="px-4">
+            <h1 class="text-4xl md:text-5xl font-light mb-4">L'essence du paysage</h1>
+            <p class="text-lg md:text-xl font-light max-w-2xl mx-auto">
+                Peintures minimalistes inspirées par la mer et les paysages,<br>
+                avec une sensibilité japonaise
+            </p>
+        </div>
     </section>
 
-    <section id="oeuvres">
-      <h2>Œuvres majeures</h2>
-      <ul>
-        <li>"Tableau 1" (année)</li>
-        <li>"Tableau 2" (année)</li>
-        <li>"Tableau 3" (année)</li>
-      </ul>
+    <!-- Tableaux disponibles -->
+    <section id="tableaux" class="py-16 px-6 md:px-12 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-2xl md:text-3xl font-light text-center mb-12">Tableaux disponibles</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
+                    <img src="images/tableau1.jpg" alt="Mer calme" class="w-full h-64 md:h-80 object-cover" onclick="openModal(this,0)">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                        <h3 class="font-light">Mer calme</h3>
+                        <p class="text-sm mt-1">Acrylique sur toile • 50x70cm</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-sm">1 200€</span>
+                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
+                    <img src="images/tableau2.jpg" alt="Lac au crépuscule" class="w-full h-64 md:h-80 object-cover" onclick="openModal(this,100)">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                        <h3 class="font-light">Lac au crépuscule</h3>
+                        <p class="text-sm mt-1">Aquarelle sur papier • 40x60cm</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-sm">950€</span>
+                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
+                    <img src="images/tableau3.jpg" alt="Reflets montagneux" class="w-full h-64 md:h-80 object-cover" onclick="openModal(this,200)">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                        <h3 class="font-light">Reflets montagneux</h3>
+                        <p class="text-sm mt-1">Encre sur papier • 60x40cm</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-sm">1 500€</span>
+                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
+                    <img src="images/tableau4.jpg" alt="Force de l'océan" class="w-full h-64 md:h-80 object-cover" onclick="openModal(this,300)">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                        <h3 class="font-light">Force de l'océan</h3>
+                        <p class="text-sm mt-1">Acrylique sur toile • 70x100cm</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-sm">2 200€</span>
+                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
+                    <img src="images/tableau5.jpg" alt="Brumes matinales" class="w-full h-64 md:h-80 object-cover" onclick="openModal(this,400)">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                        <h3 class="font-light">Brumes matinales</h3>
+                        <p class="text-sm mt-1">Encre et aquarelle • 50x70cm</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-sm">1 800€</span>
+                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
+                    <img src="images/tableau6.jpg" alt="Horizon fleuri" class="w-full h-64 md:h-80 object-cover" onclick="openModal(this,500)">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                        <h3 class="font-light">Horizon fleuri</h3>
+                        <p class="text-sm mt-1">Gouache sur papier • 40x60cm</p>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-sm">1 100€</span>
+                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section id="galerie" class="gallery">
-      <img src="images/tableau1.jpg" alt="Tableau 1">
-      <img src="images/tableau2.jpg" alt="Tableau 2">
-      <img src="images/tableau3.jpg" alt="Tableau 3">
-      <!-- Ajoute autant d'images que nécessaire -->
+    <!-- Galerie expositions -->
+    <section id="galerie" class="py-16 px-6 md:px-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-2xl md:text-3xl font-light text-center mb-12">Galerie</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <img src="images/expo1.jpg" alt="Exposition 1" class="w-full h-64 md:h-80 object-cover cursor-pointer gallery-slide" onclick="openModal(this,0)">
+                <img src="images/expo2.jpg" alt="Exposition 2" class="w-full h-64 md:h-80 object-cover cursor-pointer gallery-slide" onclick="openModal(this,100)">
+                <img src="images/expo3.jpg" alt="Exposition 3" class="w-full h-64 md:h-80 object-cover cursor-pointer gallery-slide" onclick="openModal(this,200)">
+                <img src="images/expo4.jpg" alt="Exposition 4" class="w-full h-64 md:h-80 object-cover cursor-pointer gallery-slide" onclick="openModal(this,300)">
+                <img src="images/expo5.jpg" alt="Exposition 5" class="w-full h-64 md:h-80 object-cover cursor-pointer gallery-slide" onclick="openModal(this,400)">
+                <img src="images/expo6.jpg" alt="Exposition 6" class="w-full h-64 md:h-80 object-cover cursor-pointer gallery-slide" onclick="openModal(this,500)">
+            </div>
+        </div>
     </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>Pour toute demande d'information ou pour contacter l'administrateur du site, envoyez un mail à : <a href="mailto:exemple@email.com">exemple@email.com</a></p>
+    <!-- About Section -->
+    <section id="a-propos" class="py-16 px-6 md:px-12 bg-white">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center">
+            <div class="md:w-1/6 mb-8 md:mb-0 md:pr-12">
+                <img src="images/artist.jpg" alt="Artiste au travail" class="artist-image object-cover rounded-md">
+            </div>
+            <div class="md:w-5/6">
+                <h2 class="text-2xl md:text-3xl font-light mb-6">L'artiste</h2>
+                <p class="text-gray-700 mb-4 font-light leading-relaxed">
+                    Né à LORIENT le 12 Janvier 1948, Claude Louis MOREAU, après des études classiques, entre aux Beaux-Arts en 1965 et y étudie les arts et l'Architecture.
+                </p>
+                <p class="text-gray-700 mb-4 font-light leading-relaxed">
+                    Rencontre et travaille avec les peintres: Claude HUART, Henri JOUBIOU et Jean COULLIOU et le céramiste Jean Claude GOUALC'H avec qui il travaille conjointement à ses études.
+                </p>
+                <p class="text-gray-700 mb-4 font-light leading-relaxed">
+                    Architecte d'intérieur designer de formation, après un périple chez ses pairs ouvre sa propre agence en 1979.
+                </p>
+                <p class="text-gray-700 mb-4 font-light leading-relaxed">
+                    Aujourd'hui il enseigne les arts et l'architecture intérieure à l'institut de formation des arts et techniques de Vannes qu'il dirigea jusque en 2008, il consacre dorénavant ses loisirs à ses deux grandes passions: la mer et la peinture.
+                </p>
+                <p class="text-gray-700 mb-4 font-light leading-relaxed">
+                    Inspiré par les paysages maritimes et la philosophie esthétique japonaise du "ma" (l'espace entre les choses), notre artiste crée des œuvres qui capturent l'essence même des éléments naturels.
+                </p>
+                <p class="text-gray-700 font-light leading-relaxed">
+                    Chaque toile est une méditation sur la relation entre l'eau, le ciel et la terre, réduite à ses formes les plus pures.
+                </p>
+                <p class="text-gray-700 font-light leading-relaxed">
+                    Travaillant principalement avec des techniques mixtes alliant l'encre, l'aquarelle et l'acrylique, l'artiste cherche à exprimer l'impermanence et la beauté éphémère de la nature.
+                </p>
+            </div>
+        </div>
     </section>
-  </main>
 
-  <footer>
-    &copy; 2025 Claude Louis Moreau. Tous droits réservés.
-  </footer>
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 px-6 md:px-12 bg-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-2xl md:text-3xl font-light mb-12">Contactez moi</h2>
+            <p class="text-gray-700 font-light mb-4">email : jacqlaude@orange.fr</p>
+            <p class="text-gray-700 font-light mb-4">mobile : 06.21.07.31.90</p>
+            <form class="max-w-md mx-auto space-y-4">
+                <input type="text" placeholder="Nom" class="w-full px-4 py-2 border-b border-gray-300 focus:border-black outline-none font-light">
+                <input type="email" placeholder="Email" class="w-full px-4 py-2 border-b border-gray-300 focus:border-black outline-none font-light">
+                <textarea placeholder="Message" rows="4" class="w-full px-4 py-2 border-b border-gray-300 focus:border-black outline-none font-light"></textarea>
+                <button type="submit" class="px-6 py-2 bg-black text-white text-sm font-light hover:bg-gray-800 transition duration-300">Envoyer</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-8 px-6 md:px-12 text-center">
+        <p class="text-sm text-gray-600 font-light mb-2">© 2023 Galerie d'art maritime. Tous droits réservés.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="myModal" class="cursor-pointer" onclick="closeModal()">
+        <img id="modalImage">
+    </div>
+
+    <script>
+        const modal = document.getElementById('myModal');
+        const modalImg = document.getElementById('modalImage');
+        const galleryImages = document.querySelectorAll('.gallery-slide');
+        const tableauImages = document.querySelectorAll('.tableau-slide');
+
+        function openModal(imgElement, delay) {
+            modalImg.style.transition = 'none';
+            modalImg.style.transform = 'translateX(-100vw) scale(0.8)';
+            modalImg.style.opacity = '0';
+            modal.classList.add('show');
+
+            setTimeout(() => {
+                modalImg.src = imgElement.src;
+                modalImg.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+                modalImg.style.transform = 'translateX(0) scale(1)';
+                modalImg.style.opacity = '1';
+            }, delay);
+        }
+
+        function closeModal() {
+            modalImg.style.transform = 'translateX(100vw) scale(0.8)';
+            modalImg.style.opacity = '0';
+            setTimeout(() => modal.classList.remove('show'), 500);
+        }
+
+        // Slide-in cascade effect for gallery and tableaux images
+        window.addEventListener('load', () => {
+            tableauImages.forEach((img, index) => {
+                setTimeout(() => { img.classList.add('show'); }, index * 150);
+            });
+            galleryImages.forEach((img, index) => {
+                setTimeout(() => { img.classList.add('show'); }, index * 150);
+            });
+        });
+    </script>
+
 </body>
 </html>
