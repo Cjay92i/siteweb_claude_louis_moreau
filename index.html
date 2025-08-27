@@ -21,10 +21,16 @@
             background-size: cover;
             background-position: center;
         }
-        .artwork-hover:hover .artwork-info { opacity: 1; transform: translateY(0);}
+        /* Comportement du bandeau d'information : invisible par défaut, visible au survol */
         .artwork-info {
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.9);
+            opacity: 0; /* Invisible par défaut */
+            transform: translateY(4px); /* Légèrement décalé vers le bas par défaut */
+        }
+        .artwork-hover:hover .artwork-info {
+            opacity: 1; /* Visible au survol */
+            transform: translateY(0); /* Remonte à sa position normale au survol */
         }
         .nav-link { position: relative; }
         .nav-link:after {
@@ -87,30 +93,29 @@
             transform: scale(1.05);
             transition: transform 0.3s ease;
         }
-        /* ----------- Grille photo forcée à 3 colonnes partout ----------- */
+        /* Grille photo forcée à 3 colonnes pour la section "Tableaux disponibles" et "Galerie" */
         .force-3-cols {
             display: grid;
             grid-template-columns: repeat(3, 1fr) !important;
             gap: 2rem;
         }
-        /* Les images dans la galerie et dans la première grille des tableaux seront affectées par ceci,
-           mais les artwork-image-wrapper prendront le dessus pour les tableaux */
-        .force-3-cols img {
+        /* Styles pour les images de la galerie, inchangés car non demandés */
+        .force-3-cols.gallery-grid img {
             width: 100%;
             height: 14vw;
             max-height: 220px;
             object-fit: cover;
         }
 
-        /* Nouveaux styles pour les images carrées dans la section Tableaux disponibles (et carrousel) */
-        .artwork-image-wrapper { /* Conteneur pour l'image carrée */
+        /* Styles pour les images carrées dans la section "Tableaux disponibles" (initiales et carrousel) */
+        .artwork-square-wrapper {
             width: 100%;
             padding-bottom: 100%; /* Crée un ratio d'aspect carré */
             position: relative;
             overflow: hidden;
             border-radius: 8px; /* Coins arrondis pour l'image */
         }
-        .artwork-image-wrapper img {
+        .artwork-square-wrapper img {
             position: absolute;
             top: 0;
             left: 0;
@@ -120,31 +125,22 @@
         }
         
         /* Styles pour le carrousel */
-        .carousel-wrapper {
+        .carousel-container {
+            margin-top: 3rem; /* Espacement après la grille des 6 tableaux */
             position: relative;
-            margin: 2rem auto 0 auto; /* Marge au-dessus, auto gauche/droite */
-            max-width: 100%; /* Assurer qu'il ne dépasse pas le conteneur parent */
-            overflow: hidden; /* Important pour masquer les éléments en dehors de la vue */
         }
-        .carousel-slides {
+        .carousel-slides-wrapper {
             display: flex;
-            transition: transform 0.5s ease-in-out; /* Animation de défilement */
+            overflow-x: hidden; /* Cache les slides non visibles */
+            scroll-behavior: smooth; /* Défilement doux */
+            -webkit-overflow-scrolling: touch;
+            padding: 0 1rem; /* Pour que les premiers/derniers items aient un peu de marge */
+            gap: 2rem; /* Espacement entre les items du carrousel */
         }
         .carousel-slide-item {
-            flex: 0 0 calc(100% / 6); /* 6 items par vue sur desktop */
+            /* Afficher toujours 6 items par vue, comme demandé "s'afficheront également par 6" */
+            flex: 0 0 calc(100% / 6 - (2rem * 5 / 6)); /* 6 items par vue avec gap */
             box-sizing: border-box;
-            padding: 0 1rem; /* Espace entre les items du carrousel */
-        }
-        /* Ajustements pour les carrousel items sur mobile/tablette */
-        @media (max-width: 1024px) { /* Tablette: 3 items */
-            .carousel-slide-item {
-                flex: 0 0 calc(100% / 3);
-            }
-        }
-        @media (max-width: 768px) { /* Mobile: 1 item */
-            .carousel-slide-item {
-                flex: 0 0 100%;
-            }
         }
 
         .carousel-prev, .carousel-next {
@@ -162,8 +158,8 @@
             line-height: 1;
             user-select: none;
         }
-        .carousel-prev { left: 1rem; }
-        .carousel-next { right: 1rem; }
+        .carousel-prev { left: 0rem; }
+        .carousel-next { right: 0rem; }
     </style>
 </head>
 <body>
@@ -199,13 +195,13 @@
         <div class="max-w-7xl mx-auto">
             <h2 class="text-2xl md:text-3xl font-light text-center mb-12">Tableaux disponibles</h2>
             
-            <!-- Les 6 premières photos, dans la grille d'origine, en carré -->
+            <!-- Les 6 premiers tableaux dans une grille standard avec images carrées -->
             <div class="force-3-cols">
                 <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                    <div class="artwork-image-wrapper">
+                    <div class="artwork-square-wrapper">
                         <img src="images/tableau1.jpg" alt="Mer calme" onclick="openModal(this,0)">
                     </div>
-                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="font-light">Mer calme</h3>
                         <p class="text-sm mt-1">Acrylique sur toile • 50x70cm</p>
                         <div class="flex justify-between items-center mt-2">
@@ -215,10 +211,10 @@
                     </div>
                 </div>
                 <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                    <div class="artwork-image-wrapper">
+                    <div class="artwork-square-wrapper">
                         <img src="images/tableau2.jpg" alt="Lac au crépuscule" onclick="openModal(this,100)">
                     </div>
-                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="font-light">Lac au crépuscule</h3>
                         <p class="text-sm mt-1">Aquarelle sur papier • 40x60cm</p>
                         <div class="flex justify-between items-center mt-2">
@@ -228,10 +224,10 @@
                     </div>
                 </div>
                 <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                    <div class="artwork-image-wrapper">
+                    <div class="artwork-square-wrapper">
                         <img src="images/tableau3.jpg" alt="Reflets montagneux" onclick="openModal(this,200)">
                     </div>
-                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="font-light">Reflets montagneux</h3>
                         <p class="text-sm mt-1">Encre sur papier • 60x40cm</p>
                         <div class="flex justify-between items-center mt-2">
@@ -241,10 +237,10 @@
                     </div>
                 </div>
                 <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                    <div class="artwork-image-wrapper">
+                    <div class="artwork-square-wrapper">
                         <img src="images/tableau4.jpg" alt="Force de l'océan" onclick="openModal(this,300)">
                     </div>
-                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="font-light">Force de l'océan</h3>
                         <p class="text-sm mt-1">Acrylique sur toile • 70x100cm</p>
                         <div class="flex justify-between items-center mt-2">
@@ -254,10 +250,10 @@
                     </div>
                 </div>
                 <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                    <div class="artwork-image-wrapper">
+                    <div class="artwork-square-wrapper">
                         <img src="images/tableau5.jpg" alt="Brumes matinales" onclick="openModal(this,400)">
                     </div>
-                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="font-light">Brumes matinales</h3>
                         <p class="text-sm mt-1">Encre et aquarelle • 50x70cm</p>
                         <div class="flex justify-between items-center mt-2">
@@ -267,10 +263,10 @@
                     </div>
                 </div>
                 <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                    <div class="artwork-image-wrapper">
+                    <div class="artwork-square-wrapper">
                         <img src="images/tableau6.jpg" alt="Horizon fleuri" onclick="openModal(this,500)">
                     </div>
-                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                    <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                         <h3 class="font-light">Horizon fleuri</h3>
                         <p class="text-sm mt-1">Gouache sur papier • 40x60cm</p>
                         <div class="flex justify-between items-center mt-2">
@@ -282,16 +278,16 @@
             </div>
 
             <!-- Carrousel pour les tableaux supplémentaires -->
-            <div class="carousel-wrapper">
-                <div class="carousel-slides">
+            <div class="carousel-container">
+                <div class="carousel-slides-wrapper">
                     <!-- Nouveaux tableaux de 7 à 30 -->
-                    <!-- Pour simplifier, les informations sont génériques, vous pourrez les personnaliser -->
+                    <!-- Les informations sont génériques pour simplifier, vous pourrez les personnaliser -->
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau7.jpg" alt="Coucher de soleil sur l'océan" onclick="openModal(this,600)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Coucher de soleil sur l'océan</h3>
                                 <p class="text-sm mt-1">Acrylique sur toile • 60x60cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -303,10 +299,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau8.jpg" alt="Falaise balayée par le vent" onclick="openModal(this,700)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Falaise balayée par le vent</h3>
                                 <p class="text-sm mt-1">Huile sur bois • 45x45cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -318,10 +314,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau9.jpg" alt="Reflets argentés" onclick="openModal(this,800)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Reflets argentés</h3>
                                 <p class="text-sm mt-1">Encre sur papier • 50x50cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -333,10 +329,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau10.jpg" alt="Matins brumeux sur le port" onclick="openModal(this,900)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Matins brumeux sur le port</h3>
                                 <p class="text-sm mt-1">Acrylique sur toile • 70x70cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -348,10 +344,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau11.jpg" alt="Silence des profondeurs" onclick="openModal(this,1000)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Silence des profondeurs</h3>
                                 <p class="text-sm mt-1">Aquarelle sur papier • 40x40cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -363,10 +359,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau12.jpg" alt="Lumière du phare" onclick="openModal(this,1100)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Lumière du phare</h3>
                                 <p class="text-sm mt-1">Encre sur papier • 60x60cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -378,10 +374,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau13.jpg" alt="Vagues et écume" onclick="openModal(this,1200)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Vagues et écume</h3>
                                 <p class="text-sm mt-1">Acrylique sur toile • 80x80cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -393,10 +389,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau14.jpg" alt="Chemin côtier" onclick="openModal(this,1300)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Chemin côtier</h3>
                                 <p class="text-sm mt-1">Aquarelle sur papier • 50x50cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -408,10 +404,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau15.jpg" alt="Entre terre et mer" onclick="openModal(this,1400)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Entre terre et mer</h3>
                                 <p class="text-sm mt-1">Encre sur papier • 40x40cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -423,10 +419,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau16.jpg" alt="Lever de soleil sur l'horizon" onclick="openModal(this,1500)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Lever de soleil sur l'horizon</h3>
                                 <p class="text-sm mt-1">Acrylique sur toile • 60x80cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -438,10 +434,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau17.jpg" alt="Mer agitée" onclick="openModal(this,1600)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Mer agitée</h3>
                                 <p class="text-sm mt-1">Huile sur toile • 70x70cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -453,10 +449,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau18.jpg" alt="Douceur du matin" onclick="openModal(this,1700)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Douceur du matin</h3>
                                 <p class="text-sm mt-1">Aquarelle sur papier • 45x60cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -468,10 +464,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau19.jpg" alt="Rivage secret" onclick="openModal(this,1800)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Rivage secret</h3>
                                 <p class="text-sm mt-1">Encre sur papier • 50x70cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -483,10 +479,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau20.jpg" alt="Montagnes et mer" onclick="openModal(this,1900)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Montagnes et mer</h3>
                                 <p class="text-sm mt-1">Acrylique sur toile • 70x90cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -498,10 +494,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau21.jpg" alt="Calme plat" onclick="openModal(this,2000)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Calme plat</h3>
                                 <p class="text-sm mt-1">Aquarelle sur papier • 30x40cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -513,10 +509,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau22.jpg" alt="Tempête en mer" onclick="openModal(this,2100)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Tempête en mer</h3>
                                 <p class="text-sm mt-1">Huile sur toile • 80x100cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -528,10 +524,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau23.jpg" alt="Sentier fleuri au bord de l'eau" onclick="openModal(this,2200)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Sentier fleuri au bord de l'eau</h3>
                                 <p class="text-sm mt-1">Acrylique sur toile • 60x60cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -543,10 +539,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau24.jpg" alt="Sous la brume" onclick="openModal(this,2300)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Sous la brume</h3>
                                 <p class="text-sm mt-1">Encre et aquarelle • 50x50cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -558,10 +554,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau25.jpg" alt="Océan infini" onclick="openModal(this,2400)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Océan infini</h3>
                                 <p class="text-sm mt-1">Acrylique sur toile • 90x90cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -573,10 +569,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau26.jpg" alt="Estuaire paisible" onclick="openModal(this,2500)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Estuaire paisible</h3>
                                 <p class="text-sm mt-1">Aquarelle sur papier • 40x60cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -588,10 +584,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau27.jpg" alt="Reflets de nuages" onclick="openModal(this,2600)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Reflets de nuages</h3>
                                 <p class="text-sm mt-1">Encre sur papier • 50x50cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -603,10 +599,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau28.jpg" alt="Lumière du matin sur la côte" onclick="openModal(this,2700)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Lumière du matin sur la côte</h3>
                                 <p class="text-sm mt-1">Acrylique sur toile • 70x70cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -618,10 +614,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau29.jpg" alt="Calme après la tempête" onclick="openModal(this,2800)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Calme après la tempête</h3>
                                 <p class="text-sm mt-1">Huile sur toile • 60x80cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -633,10 +629,10 @@
                     </div>
                     <div class="carousel-slide-item">
                         <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
-                            <div class="artwork-image-wrapper">
+                            <div class="artwork-square-wrapper">
                                 <img src="images/tableau30.jpg" alt="Fin d'après-midi sur la plage" onclick="openModal(this,2900)">
                             </div>
-                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4 opacity-0 transform translate-y-4">
+                            <div class="artwork-info absolute bottom-0 left-0 right-0 p-4">
                                 <h3 class="font-light">Fin d'après-midi sur la plage</h3>
                                 <p class="text-sm mt-1">Aquarelle sur papier • 50x70cm</p>
                                 <div class="flex justify-between items-center mt-2">
@@ -729,43 +725,35 @@
     <script>
         const modal = document.getElementById('myModal');
         const modalImg = document.getElementById('modalImage');
-        const carouselSlides = document.querySelector('.carousel-slides');
+        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper');
         const carouselItems = document.querySelectorAll('.carousel-slide-item');
         const prevButton = document.querySelector('.carousel-prev');
         const nextButton = document.querySelector('.carousel-next');
         const galleryImages = document.querySelectorAll('.gallery-slide');
-        const initialTableauImages = document.querySelectorAll('.force-3-cols .tableau-slide img'); // Les 6 premières images
-        const carouselTableauImages = document.querySelectorAll('.carousel-slide-item .tableau-slide img'); // Les images du carrousel
+        const tableauImages = document.querySelectorAll('.tableau-slide');
 
         let currentSlideIndex = 0;
-        
-        function getSlidesPerPage() {
-            if (window.innerWidth <= 480) {
-                return 1;
-            } else if (window.innerWidth <= 1024) { // Tablette
-                return 3; 
-            } else { // Desktop
-                return 6;
-            }
-        }
+        const slidesPerPage = 6; // Fixé à 6 photos par page comme demandé
 
         function updateCarouselPosition() {
             if (carouselItems.length === 0) return;
-            const itemWidth = carouselItems[0].offsetWidth; // Largeur de l'item incluant le padding
-            const gap = parseFloat(getComputedStyle(carouselItems[0]).paddingLeft) * 2; // Représente le gap entre les items
-            const totalItemWidth = itemWidth + gap; // Largeur de l'item + le gap à droite
-            
-            // Ajuster le transform pour le défilement basé sur le nombre d'items par page
-            carouselSlides.style.transform = `translateX(${-currentSlideIndex * (carouselSlides.offsetWidth / getSlidesPerPage())}px)`;
+
+            // La largeur d'une "page" du carrousel est simplement la largeur visible du wrapper,
+            // puisque les items sont dimensionnés pour que 6 remplissent cette largeur.
+            const pageScrollWidth = carouselSlidesWrapper.offsetWidth;
+
+            carouselSlidesWrapper.style.transform = `translateX(${-currentSlideIndex * pageScrollWidth}px)`;
         }
 
         prevButton.addEventListener('click', () => {
-            currentSlideIndex = Math.max(0, currentSlideIndex - getSlidesPerPage());
+            currentSlideIndex = Math.max(0, currentSlideIndex - 1); // Défile d'une "page" (6 items)
             updateCarouselPosition();
         });
 
         nextButton.addEventListener('click', () => {
-            currentSlideIndex = Math.min(carouselItems.length - getSlidesPerPage(), currentSlideIndex + getSlidesPerPage());
+            // Calcule l'index maximum possible pour éviter de défiler au-delà de la fin
+            const maxPageIndex = Math.ceil(carouselItems.length / slidesPerPage) - 1;
+            currentSlideIndex = Math.min(maxPageIndex, currentSlideIndex + 1); // Défile d'une "page" (6 items)
             updateCarouselPosition();
         });
 
@@ -790,23 +778,21 @@
             setTimeout(() => modal.classList.remove('show'), 500);
         }
 
-        // Slide-in cascade effect for gallery and tableaux images
+        // Effet d'apparition en cascade pour les images de la galerie et des tableaux
         window.addEventListener('load', () => {
-            // Appliquer le slide-in pour les 6 premières images
-            initialTableauImages.forEach((img, index) => {
-                setTimeout(() => { img.closest('.tableau-slide').classList.add('show'); }, index * 150);
+            tableauImages.forEach((img, index) => {
+                setTimeout(() => { img.classList.add('show'); }, index * 150);
             });
-            // Appliquer le slide-in pour les images de la galerie
             galleryImages.forEach((img, index) => {
-                setTimeout(() => { img.closest('.gallery-slide').classList.add('show'); }, index * 150);
+                setTimeout(() => { img.classList.add('show'); }, index * 150);
             });
-            // Initialisation du carrousel
-            updateCarouselPosition();
+            updateCarouselPosition(); // Initialisation du carrousel
         });
 
         window.addEventListener('resize', () => {
-            currentSlideIndex = 0; // Réinitialiser le carrousel au début lors du redimensionnement
-            updateCarouselPosition(); // Ajuste la position du carrousel au redimensionnement
+            // Sur redimensionnement, on s'assure que la position du carrousel est mise à jour
+            // car la largeur de carouselSlidesWrapper peut changer.
+            updateCarouselPosition();
         });
 
     </script>
