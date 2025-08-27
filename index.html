@@ -73,7 +73,7 @@
                 max-height: 90vh;
             }
         }
-        .gallery-slide, .tableau-slide { /* Le tableau-slide ne sera plus utilisé pour les éléments du carrousel */
+        .gallery-slide, .tableau-slide {
             transform: translateY(50px);
             opacity: 0;
             transition: transform 0.5s ease, opacity 0.5s ease;
@@ -82,20 +82,32 @@
             transform: translateY(0);
             opacity: 1;
         }
-        .artist-image { width: 100%; height: auto; } /* Ajusté à 100% pour mieux s'intégrer */
-        .gallery-slide:hover, .tableau-slide:hover { /* Le tableau-slide ne sera plus utilisé pour les éléments du carrousel */
+        .artist-image { width: 200%; height: auto; } /* Reverted to original width */
+        .gallery-slide:hover, .tableau-slide:hover {
             transform: scale(1.05);
             transition: transform 0.3s ease;
         }
+        /* ----------- Grille photo forcée à 3 colonnes partout ----------- */
+        .force-3-cols {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 2rem;
+        }
+        .force-3-cols img {
+            width: 100%;
+            height: 14vw;
+            max-height: 220px;
+            object-fit: cover;
+        }
 
-        /* Styles pour les images carrées dans la section Tableaux */
+        /* Styles spécifiques pour les images carrées dans la section Tableaux */
         .artwork-hover {
-            position: relative; /* Nécessaire pour positionner l'artwork-info */
-            border-radius: 8px; /* Coins arrondis pour la carte */
+            position: relative;
             overflow: hidden;
+            border-radius: 8px; /* Coins arrondis pour la carte entière */
             box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Ombre douce */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #fff; /* Fond blanc pour la carte */
+            background-color: #fff; /* Fond blanc */
         }
         .artwork-hover:hover {
             transform: translateY(-5px);
@@ -115,34 +127,6 @@
             height: 100%;
             object-fit: cover;
         }
-        /* Restaurer le comportement original de artwork-info */
-        .artwork-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 1rem;
-            opacity: 0;
-            transform: translateY(4px); /* Original: translate-y-4 */
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
-        }
-        .artwork-info h3 { margin-bottom: 0.25rem; }
-        .artwork-info p { margin-bottom: 0.5rem; }
-        .artwork-info .flex { margin-top: 0.75rem; }
-
-        /* Grille pour la galerie */
-        .force-3-cols {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-        .force-3-cols.gallery-grid img { /* Appliquer aussi aux images de galerie */
-            width: 100%;
-            height: 14vw;
-            max-height: 220px;
-            object-fit: cover;
-        }
 
         /* Styles pour le carrousel */
         .carousel-wrapper {
@@ -155,7 +139,7 @@
             overflow-x: hidden; /* Cache les slides non visibles */
             scroll-behavior: smooth; /* Défilement doux */
             -webkit-overflow-scrolling: touch;
-            padding: 1rem 0; /* Padding pour les marges des items */
+            padding: 1rem 0; /* Ajout d'un padding pour que les items aient un espace sur les côtés */
         }
         .carousel-slide-item {
             flex: 0 0 calc(100% / 3); /* 3 items par vue */
@@ -239,7 +223,7 @@
                 <div class="carousel-slides">
                     <!-- Chaque tableau est un élément du carrousel -->
                     <div class="carousel-slide-item">
-                        <div class="artwork-hover cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
                             <div class="artwork-container">
                                 <img src="images/tableau1.jpg" alt="Mer calme" onclick="openModal(this,0)">
                             </div>
@@ -254,7 +238,7 @@
                         </div>
                     </div>
                     <div class="carousel-slide-item">
-                        <div class="artwork-hover cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
                             <div class="artwork-container">
                                 <img src="images/tableau2.jpg" alt="Lac au crépuscule" onclick="openModal(this,100)">
                             </div>
@@ -269,7 +253,7 @@
                         </div>
                     </div>
                     <div class="carousel-slide-item">
-                        <div class="artwork-hover cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
                             <div class="artwork-container">
                                 <img src="images/tableau3.jpg" alt="Reflets montagneux" onclick="openModal(this,200)">
                             </div>
@@ -284,7 +268,7 @@
                         </div>
                     </div>
                     <div class="carousel-slide-item">
-                        <div class="artwork-hover cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
                             <div class="artwork-container">
                                 <img src="images/tableau4.jpg" alt="Force de l'océan" onclick="openModal(this,300)">
                             </div>
@@ -299,7 +283,7 @@
                         </div>
                     </div>
                     <div class="carousel-slide-item">
-                        <div class="artwork-hover cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
                             <div class="artwork-container">
                                 <img src="images/tableau5.jpg" alt="Brumes matinales" onclick="openModal(this,400)">
                             </div>
@@ -314,7 +298,7 @@
                         </div>
                     </div>
                     <div class="carousel-slide-item">
-                        <div class="artwork-hover cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative overflow-hidden cursor-pointer tableau-slide">
                             <div class="artwork-container">
                                 <img src="images/tableau6.jpg" alt="Horizon fleuri" onclick="openModal(this,500)">
                             </div>
@@ -373,7 +357,7 @@
                     Aujourd'hui il enseigne les arts et l'architecture intérieure à l'institut de formation des arts et techniques de Vannes qu'il dirigea jusque en 2008, il consacre dorénavant ses loisirs à ses deux grandes passions: la mer et la peinture.
                 </p>
                 <p class="text-gray-700 mb-4 font-light leading-relaxed">
-                    Inspiré par les paysages maritimes et la philosophie esthilosophie esthétique japonaise du "ma" (l'espace entre les choses), notre artiste crée des œuvres qui capturent l'essence même des éléments naturels.
+                    Inspiré par les paysages maritimes et la philosophie esthétique japonaise du "ma" (l'espace entre les choses), notre artiste crée des œuvres qui capturent l'essence même des éléments naturels.
                 </p>
                 <p class="text-gray-700 font-light leading-relaxed">
                     Chaque toile est une méditation sur la relation entre l'eau, le ciel et la terre, réduite à ses formes les plus pures.
