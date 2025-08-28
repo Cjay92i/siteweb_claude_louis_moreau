@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- Pas de meta viewport pour fo rcer l'affichage desktop partout -->
+    <!-- Pas de meta viewport pour forcer l'affichage desktop partout -->
     <title>Prototype du site de Claude Louis Moreau – Peintures maritimes</title>
     <meta property="og:title" content="Prototype du site de Claude Louis Moreau – Peintures maritimes">
     <!-- Tu peux aussi ajouter une image d'aperçu si tu veux : -->
@@ -167,23 +167,12 @@
             display: flex;
             justify-content: center;
             margin-top: 2rem;
-            gap: 1rem;
+            font-size: 1rem;
+            color: #555;
         }
-        .pagination-link {
+        .pagination-info {
             padding: 0.5rem 1rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #fff;
-            transition: all 0.2s ease;
-        }
-        .pagination-link:hover {
-            background-color: #eee;
-        }
-        .pagination-link.active {
-            background-color: #333;
-            color: #fff;
-            border-color: #333;
+            /* Pas de bordure ni de fond pour un affichage simple */
         }
 
         /* Styles pour la galerie d'expositions (inchangés) */
@@ -740,9 +729,8 @@
         function updateCarouselPosition() {
             if (carouselPages.length === 0 || !carouselContainer || !carouselSlidesWrapper) return;
 
-            // La largeur de défilement est la largeur du carouselSlidesWrapper,
-            // car carousel-page est flex: 0 0 100% de carousel-slides-wrapper.
-            const pageScrollWidth = carouselSlidesWrapper.offsetWidth;
+            // La largeur de défilement est la largeur du carouselContainer lui-même
+            const pageScrollWidth = carouselContainer.offsetWidth;
 
             const translateX = -currentSlidePageIndex * pageScrollWidth;
             carouselSlidesWrapper.style.transform = `translateX(${translateX}px)`;
@@ -758,19 +746,10 @@
             if (!carouselPagination) return;
             carouselPagination.innerHTML = ''; // Vide la pagination existante
 
-            for (let i = 0; i < totalPages; i++) {
-                const pageLink = document.createElement('span');
-                pageLink.textContent = `Page ${i + 1}`;
-                pageLink.classList.add('pagination-link');
-                if (i === currentSlidePageIndex) {
-                    pageLink.classList.add('active');
-                }
-                pageLink.addEventListener('click', () => {
-                    currentSlidePageIndex = i;
-                    updateCarouselPosition();
-                });
-                carouselPagination.appendChild(pageLink);
-            }
+            const paginationInfo = document.createElement('span');
+            paginationInfo.classList.add('pagination-info');
+            paginationInfo.textContent = `Page ${currentSlidePageIndex + 1} sur ${totalPages}`;
+            carouselPagination.appendChild(paginationInfo);
         }
 
         prevButton.addEventListener('click', () => {
