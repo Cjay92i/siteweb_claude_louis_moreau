@@ -126,10 +126,9 @@
         .carousel-slides-wrapper {
             display: flex;
             transition: transform 0.5s ease-in-out; /* Transition douce pour le défilement */
-            width: 500%; /* 5 pages * 100% */
         }
         .carousel-page {
-            flex: 0 0 20%; /* Chaque page prend 20% de la largeur totale (100% / 5 pages) */
+            flex: 0 0 100%; /* Chaque page prend 100% de la largeur du conteneur visible */
             display: grid;
             grid-template-columns: repeat(3, 1fr); /* 3 colonnes comme demandé */
             gap: 2rem; /* Espacement entre les images */
@@ -714,11 +713,12 @@
         const totalPages = carouselPages.length;
 
         function updateCarouselPosition() {
-            if (carouselPages.length === 0 || !carouselContainer) return;
+            if (carouselPages.length === 0) return;
 
-            // Calculer le pourcentage de déplacement basé sur l'index de la page
-            const translatePercent = -currentSlidePageIndex * 20; // 20% par page (5 pages = 100% / 5)
-            carouselSlidesWrapper.style.transform = `translateX(${translatePercent}%)`;
+            // Déplacement basé sur la largeur réelle du conteneur
+            const containerWidth = carouselContainer.offsetWidth;
+            const translateX = -currentSlidePageIndex * containerWidth;
+            carouselSlidesWrapper.style.transform = `translateX(${translateX}px)`;
 
             // Gestion de l'affichage des boutons
             prevButton.style.display = currentSlidePageIndex === 0 ? 'none' : 'block';
@@ -755,18 +755,19 @@
             setTimeout(() => modal.classList.remove('show'), 500);
         }
 
-        // Effet d'apparition en cascade pour les images de la galerie
+        // Initialisation et effets d'apparition
         window.addEventListener('load', () => {
             galleryImages.forEach((img, index) => {
                 setTimeout(() => { img.classList.add('show'); }, index * 150);
             });
-            updateCarouselPosition(); // Initialisation du carrousel
+            
+            // Attendre que le DOM soit complètement chargé avant d'initialiser le carrousel
+            setTimeout(() => {
+                updateCarouselPosition();
+            }, 100);
         });
 
         window.addEventListener('resize', () => {
-            // Sur redimensionnement, on s'assure que la position du carrousel est mise à jour
-            currentSlidePageIndex = Math.min(totalPages - 1, currentSlidePageIndex);
-            if (currentSlidePageIndex < 0) currentSlidePageIndex = 0;
             updateCarouselPosition();
         });
 
@@ -774,3 +775,7 @@
 
 </body>
 </html>
+
+
+
+
