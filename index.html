@@ -93,7 +93,6 @@
             transform: translateY(0);
             opacity: 1;
         }
-        /* La classe tableau-slide est supprimée pour les éléments du carrousel */
         .artist-image { width: 200%; height: auto; }
         .gallery-slide:hover, .artwork-hover:hover {
             transform: scale(1.05);
@@ -121,7 +120,7 @@
         .carousel-container {
             position: relative;
             overflow: hidden; /* Cache les images qui ne sont pas sur la "page" actuelle */
-            padding: 0 3rem; /* Espace pour les flèches */
+            /* Supprimé: padding: 0 3rem; pour une meilleure gestion des boutons */
         }
         .carousel-slides-wrapper {
             display: flex;
@@ -133,7 +132,7 @@
             grid-template-columns: repeat(3, 1fr); /* 3 colonnes comme demandé */
             gap: 2rem; /* Espacement entre les images */
             box-sizing: border-box;
-            padding: 0 1rem; /* Ajuster si nécessaire pour le padding interne des pages */
+            padding: 0 1rem; /* Padding interne des pages */
         }
         .carousel-page .artwork-hover {
             position: relative;
@@ -149,7 +148,7 @@
             background-color: rgba(0,0,0,0.6); /* Plus visible */
             color: white;
             border: none;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 0.5rem; /* Ajuster le padding des boutons */
             cursor: pointer;
             z-index: 10;
             border-radius: 4px;
@@ -161,8 +160,8 @@
         .carousel-prev:hover, .carousel-next:hover {
             background-color: rgba(0,0,0,0.8);
         }
-        .carousel-prev { left: 0; } /* Collé au bord du container */
-        .carousel-next { right: 0; } /* Collé au bord du container */
+        .carousel-prev { left: 0.5rem; } /* Légèrement à l'intérieur du conteneur */
+        .carousel-next { right: 0.5rem; } /* Légèrement à l'intérieur du conteneur */
 
         /* Styles pour la galerie d'expositions (inchangés) */
         .gallery-grid {
@@ -702,25 +701,27 @@
     <script>
         const modal = document.getElementById('myModal');
         const modalImg = document.getElementById('modalImage');
-        const carouselContainer = document.querySelector('.carousel-container');
-        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper');
-        const carouselPages = document.querySelectorAll('.carousel-page');
+        const carouselContainer = document.querySelector('.carousel-container'); // Le viewport visible
+        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper'); // Le conteneur de toutes les pages
+        const carouselPages = document.querySelectorAll('.carousel-page'); // Les pages de 6 images
         const prevButton = document.querySelector('.carousel-prev');
         const nextButton = document.querySelector('.carousel-next');
         const galleryImages = document.querySelectorAll('.gallery-slide');
 
-        let currentSlidePageIndex = 0;
+        let currentSlidePageIndex = 0; // Index de la "page" de 6 photos visible
         const totalPages = carouselPages.length;
 
         function updateCarouselPosition() {
-            if (carouselPages.length === 0) return;
+            if (carouselPages.length === 0 || !carouselContainer || !carouselSlidesWrapper) return;
 
-            // Déplacement basé sur la largeur réelle du conteneur
-            const containerWidth = carouselContainer.offsetWidth;
-            const translateX = -currentSlidePageIndex * containerWidth;
+            // La largeur de défilement est la largeur du carouselSlidesWrapper,
+            // car carousel-page est flex: 0 0 100% de carousel-slides-wrapper.
+            const pageScrollWidth = carouselSlidesWrapper.offsetWidth;
+
+            const translateX = -currentSlidePageIndex * pageScrollWidth;
             carouselSlidesWrapper.style.transform = `translateX(${translateX}px)`;
 
-            // Gestion de l'affichage des boutons
+            // Gestion de l'affichage des boutons Précédent/Suivant
             prevButton.style.display = currentSlidePageIndex === 0 ? 'none' : 'block';
             nextButton.style.display = currentSlidePageIndex >= (totalPages - 1) ? 'none' : 'block';
         }
@@ -755,19 +756,23 @@
             setTimeout(() => modal.classList.remove('show'), 500);
         }
 
-        // Initialisation et effets d'apparition
+        // Effet d'apparition en cascade pour les images de la galerie (inchangé)
         window.addEventListener('load', () => {
             galleryImages.forEach((img, index) => {
                 setTimeout(() => { img.classList.add('show'); }, index * 150);
             });
             
-            // Attendre que le DOM soit complètement chargé avant d'initialiser le carrousel
+            // Attendre un court instant pour s'assurer que le DOM est stable
+            // avant d'initialiser le carrousel.
             setTimeout(() => {
                 updateCarouselPosition();
             }, 100);
         });
 
         window.addEventListener('resize', () => {
+            // Sur redimensionnement, on s'assure que la position du carrousel est mise à jour
+            currentSlidePageIndex = Math.min(totalPages - 1, currentSlidePageIndex);
+            if (currentSlidePageIndex < 0) currentSlidePageIndex = 0;
             updateCarouselPosition();
         });
 
@@ -775,7 +780,3 @@
 
 </body>
 </html>
-
-
-
-
