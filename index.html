@@ -84,41 +84,29 @@
                 max-height: 90vh;
             }
         }
-        .gallery-slide, .tableau-slide {
+        .gallery-slide { /* Seulement pour la galerie, pas pour les tableaux */
             transform: translateY(50px);
             opacity: 0;
             transition: transform 0.5s ease, opacity 0.5s ease;
         }
-        .gallery-slide.show, .tableau-slide.show {
+        .gallery-slide.show {
             transform: translateY(0);
             opacity: 1;
         }
+        /* La classe tableau-slide sera gérée par le JS du carrousel pour l'animation */
         .artist-image { width: 200%; height: auto; }
-        .gallery-slide:hover, .tableau-slide:hover {
+        .gallery-slide:hover, .artwork-hover:hover {
             transform: scale(1.05);
             transition: transform 0.3s ease;
         }
         
-        /* Styles pour la grille des 6 premiers tableaux (3 colonnes, 2 rangées) */
-        /* La classe force-3-cols est appliquée directement au conteneur des 6 images */
-        .initial-artwork-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 colonnes */
-            gap: 2rem; /* Espacement entre les images */
-            margin-bottom: 3rem; /* Espace avant le carrousel si présent */
-        }
-        .initial-artwork-grid .artwork-hover {
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px; /* Coins arrondis pour l'image */
-        }
-
-        /* Styles pour les images carrées (appliqués aux 6 premiers et au carrousel) */
+        /* Styles pour les images carrées (appliqués à toutes les images du carrousel) */
         .artwork-square-wrapper {
             width: 100%;
             padding-bottom: 100%; /* Crée un ratio d'aspect carré */
             position: relative;
             overflow: hidden;
+            border-radius: 8px; /* Coins arrondis pour l'image */
         }
         .artwork-square-wrapper img {
             position: absolute;
@@ -129,22 +117,30 @@
             object-fit: cover;
         }
         
-        /* Styles pour le carrousel (séparé des 6 premières images) */
+        /* Styles pour le carrousel "Tableaux disponibles" */
         .carousel-container {
             position: relative;
             overflow: hidden; /* Cache les images qui ne sont pas sur la "page" actuelle */
+            padding: 0 3rem; /* Espace pour les flèches */
         }
         .carousel-slides-wrapper {
             display: flex;
             transition: transform 0.5s ease-in-out; /* Transition douce pour le défilement */
+        }
+        .carousel-page {
+            flex: 0 0 100%; /* Chaque page prend 100% de la largeur du wrapper visible */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 colonnes comme demandé */
             gap: 2rem; /* Espacement entre les images */
-        }
-        .carousel-slide-item {
-            /* Chaque item prend la bonne largeur pour que 6 items + 5 gaps tiennent dans le conteneur */
-            flex: 0 0 calc((100% - (2rem * 5)) / 6);
             box-sizing: border-box;
-            position: relative; /* Nécessaire pour le positionnement du artwork-info */
+            padding: 0 1rem; /* Ajuster si nécessaire pour le padding interne des pages */
         }
+        .carousel-page .artwork-hover {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px; /* Coins arrondis pour l'image */
+        }
+
         /* Boutons de navigation du carrousel sur les côtés des photos */
         .carousel-prev, .carousel-next {
             position: absolute;
@@ -165,8 +161,8 @@
         .carousel-prev:hover, .carousel-next:hover {
             background-color: rgba(0,0,0,0.8);
         }
-        .carousel-prev { left: 0.5rem; } /* Légèrement décalé du bord pour ne pas coller */
-        .carousel-next { right: 0.5rem; } /* Légèrement décalé du bord pour ne pas coller */
+        .carousel-prev { left: 0; } /* Collé au bord du container */
+        .carousel-next { right: 0; } /* Collé au bord du container */
 
         /* Styles pour la galerie d'expositions (inchangés) */
         .gallery-grid {
@@ -210,407 +206,415 @@
         </div>
     </section>
 
-    <!-- Tableaux disponibles -->
+    <!-- Tableaux disponibles - Un seul carrousel pour toutes les photos -->
     <section id="tableaux" class="py-16 px-6 md:px-12 bg-white">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-2xl md:text-3xl font-light text-center mb-12">Tableaux disponibles</h2>
             
-            <!-- Les 6 premiers tableaux dans une grille standard (comme avant) mais en carré -->
-            <div class="initial-artwork-grid">
-                <div class="artwork-hover relative cursor-pointer tableau-slide">
-                    <div class="artwork-square-wrapper">
-                        <img src="images/tableau1.jpg" alt="Mer calme" onclick="openModal(this,0)">
-                    </div>
-                    <div class="artwork-info">
-                        <h3 class="font-light">Mer calme</h3>
-                        <p class="text-sm mt-1">Acrylique sur toile • 50x70cm</p>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-sm">1 200€</span>
-                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="artwork-hover relative cursor-pointer tableau-slide">
-                    <div class="artwork-square-wrapper">
-                        <img src="images/tableau2.jpg" alt="Lac au crépuscule" onclick="openModal(this,100)">
-                    </div>
-                    <div class="artwork-info">
-                        <h3 class="font-light">Lac au crépuscule</h3>
-                        <p class="text-sm mt-1">Aquarelle sur papier • 40x60cm</p>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-sm">950€</span>
-                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="artwork-hover relative cursor-pointer tableau-slide">
-                    <div class="artwork-square-wrapper">
-                        <img src="images/tableau3.jpg" alt="Reflets montagneux" onclick="openModal(this,200)">
-                    </div>
-                    <div class="artwork-info">
-                        <h3 class="font-light">Reflets montagneux</h3>
-                        <p class="text-sm mt-1">Encre sur papier • 60x40cm</p>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-sm">1 500€</span>
-                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="artwork-hover relative cursor-pointer tableau-slide">
-                    <div class="artwork-square-wrapper">
-                        <img src="images/tableau4.jpg" alt="Force de l'océan" onclick="openModal(this,300)">
-                    </div>
-                    <div class="artwork-info">
-                        <h3 class="font-light">Force de l'océan</h3>
-                        <p class="text-sm mt-1">Acrylique sur toile • 70x100cm</p>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-sm">2 200€</span>
-                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="artwork-hover relative cursor-pointer tableau-slide">
-                    <div class="artwork-square-wrapper">
-                        <img src="images/tableau5.jpg" alt="Brumes matinales" onclick="openModal(this,400)">
-                    </div>
-                    <div class="artwork-info">
-                        <h3 class="font-light">Brumes matinales</h3>
-                        <p class="text-sm mt-1">Encre et aquarelle • 50x70cm</p>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-sm">1 800€</span>
-                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="artwork-hover relative cursor-pointer tableau-slide">
-                    <div class="artwork-square-wrapper">
-                        <img src="images/tableau6.jpg" alt="Horizon fleuri" onclick="openModal(this,500)">
-                    </div>
-                    <div class="artwork-info">
-                        <h3 class="font-light">Horizon fleuri</h3>
-                        <p class="text-sm mt-1">Gouache sur papier • 40x60cm</p>
-                        <div class="flex justify-between items-center mt-2">
-                            <span class="text-sm">1 100€</span>
-                            <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Carrousel pour les tableaux supplémentaires (7 à 30) -->
             <div class="carousel-container">
                 <div class="carousel-slides-wrapper">
-                    <!-- Nouveaux tableaux de 7 à 30 -->
-                    <!-- Les informations sont génériques pour simplifier, vous pourrez les personnaliser -->
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau7.jpg" alt="Coucher de soleil sur l'océan" onclick="openModal(this,600)">
+                    <!-- Page 1 : Tableaux 1 à 6 -->
+                    <div class="carousel-page">
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau1.jpg" alt="Mer calme" onclick="openModal(this,0)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Mer calme</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 50x70cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 200€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Coucher de soleil sur l'océan</h3>
-                            <p class="text-sm mt-1">Acrylique sur toile • 60x60cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 400€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau2.jpg" alt="Lac au crépuscule" onclick="openModal(this,100)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Lac au crépuscule</h3>
+                                <p class="text-sm mt-1">Aquarelle sur papier • 40x60cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">950€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau3.jpg" alt="Reflets montagneux" onclick="openModal(this,200)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Reflets montagneux</h3>
+                                <p class="text-sm mt-1">Encre sur papier • 60x40cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 500€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau4.jpg" alt="Force de l'océan" onclick="openModal(this,300)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Force de l'océan</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 70x100cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">2 200€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau5.jpg" alt="Brumes matinales" onclick="openModal(this,400)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Brumes matinales</h3>
+                                <p class="text-sm mt-1">Encre et aquarelle • 50x70cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 800€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau6.jpg" alt="Horizon fleuri" onclick="openModal(this,500)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Horizon fleuri</h3>
+                                <p class="text-sm mt-1">Gouache sur papier • 40x60cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 100€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau8.jpg" alt="Falaise balayée par le vent" onclick="openModal(this,700)">
+                    <!-- Page 2 : Tableaux 7 à 12 -->
+                    <div class="carousel-page">
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau7.jpg" alt="Coucher de soleil sur l'océan" onclick="openModal(this,600)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Coucher de soleil sur l'océan</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 60x60cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 400€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Falaise balayée par le vent</h3>
-                            <p class="text-sm mt-1">Huile sur bois • 45x45cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 050€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau8.jpg" alt="Falaise balayée par le vent" onclick="openModal(this,700)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Falaise balayée par le vent</h3>
+                                <p class="text-sm mt-1">Huile sur bois • 45x45cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 050€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau9.jpg" alt="Reflets argentés" onclick="openModal(this,800)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Reflets argentés</h3>
+                                <p class="text-sm mt-1">Encre sur papier • 50x50cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 350€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau10.jpg" alt="Matins brumeux sur le port" onclick="openModal(this,900)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Matins brumeux sur le port</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 70x70cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 900€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau11.jpg" alt="Silence des profondeurs" onclick="openModal(this,1000)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Silence des profondeurs</h3>
+                                <p class="text-sm mt-1">Aquarelle sur papier • 40x40cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">800€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau12.jpg" alt="Lumière du phare" onclick="openModal(this,1100)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Lumière du phare</h3>
+                                <p class="text-sm mt-1">Encre sur papier • 60x60cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 600€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau9.jpg" alt="Reflets argentés" onclick="openModal(this,800)">
+                    <!-- Page 3 : Tableaux 13 à 18 -->
+                    <div class="carousel-page">
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau13.jpg" alt="Vagues et écume" onclick="openModal(this,1200)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Vagues et écume</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 80x80cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">2 500€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Reflets argentés</h3>
-                            <p class="text-sm mt-1">Encre sur papier • 50x50cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 350€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau14.jpg" alt="Chemin côtier" onclick="openModal(this,1300)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Chemin côtier</h3>
+                                <p class="text-sm mt-1">Aquarelle sur papier • 50x50cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 150€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau15.jpg" alt="Entre terre et mer" onclick="openModal(this,1400)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Entre terre et mer</h3>
+                                <p class="text-sm mt-1">Encre sur papier • 40x40cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">900€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau16.jpg" alt="Lever de soleil sur l'horizon" onclick="openModal(this,1500)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Lever de soleil sur l'horizon</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 60x80cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 700€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau17.jpg" alt="Mer agitée" onclick="openModal(this,1600)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Mer agitée</h3>
+                                <p class="text-sm mt-1">Huile sur toile • 70x70cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">2 100€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau18.jpg" alt="Douceur du matin" onclick="openModal(this,1700)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Douceur du matin</h3>
+                                <p class="text-sm mt-1">Aquarelle sur papier • 45x60cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 000€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau10.jpg" alt="Matins brumeux sur le port" onclick="openModal(this,900)">
+                    <!-- Page 4 : Tableaux 19 à 24 -->
+                    <div class="carousel-page">
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau19.jpg" alt="Rivage secret" onclick="openModal(this,1800)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Rivage secret</h3>
+                                <p class="text-sm mt-1">Encre sur papier • 50x70cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 450€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Matins brumeux sur le port</h3>
-                            <p class="text-sm mt-1">Acrylique sur toile • 70x70cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 900€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau20.jpg" alt="Montagnes et mer" onclick="openModal(this,1900)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Montagnes et mer</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 70x90cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">2 300€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau21.jpg" alt="Calme plat" onclick="openModal(this,2000)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Calme plat</h3>
+                                <p class="text-sm mt-1">Aquarelle sur papier • 30x40cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">750€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau22.jpg" alt="Tempête en mer" onclick="openModal(this,2100)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Tempête en mer</h3>
+                                <p class="text-sm mt-1">Huile sur toile • 80x100cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">2 800€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau23.jpg" alt="Sentier fleuri au bord de l'eau" onclick="openModal(this,2200)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Sentier fleuri au bord de l'eau</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 60x60cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 650€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau24.jpg" alt="Sous la brume" onclick="openModal(this,2300)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Sous la brume</h3>
+                                <p class="text-sm mt-1">Encre et aquarelle • 50x50cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 250€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau11.jpg" alt="Silence des profondeurs" onclick="openModal(this,1000)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Silence des profondeurs</h3>
-                            <p class="text-sm mt-1">Aquarelle sur papier • 40x40cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">800€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                    <!-- Page 5 : Tableaux 25 à 30 -->
+                    <div class="carousel-page">
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau25.jpg" alt="Océan infini" onclick="openModal(this,2400)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Océan infini</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 90x90cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">3 000€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau12.jpg" alt="Lumière du phare" onclick="openModal(this,1100)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Lumière du phare</h3>
-                            <p class="text-sm mt-1">Encre sur papier • 60x60cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 600€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau26.jpg" alt="Estuaire paisible" onclick="openModal(this,2500)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Estuaire paisible</h3>
+                                <p class="text-sm mt-1">Aquarelle sur papier • 40x60cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">980€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau13.jpg" alt="Vagues et écume" onclick="openModal(this,1200)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Vagues et écume</h3>
-                            <p class="text-sm mt-1">Acrylique sur toile • 80x80cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">2 500€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau27.jpg" alt="Reflets de nuages" onclick="openModal(this,2600)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Reflets de nuages</h3>
+                                <p class="text-sm mt-1">Encre sur papier • 50x50cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 300€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau14.jpg" alt="Chemin côtier" onclick="openModal(this,1300)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Chemin côtier</h3>
-                            <p class="text-sm mt-1">Aquarelle sur papier • 50x50cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 150€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau28.jpg" alt="Lumière du matin sur la côte" onclick="openModal(this,2700)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Lumière du matin sur la côte</h3>
+                                <p class="text-sm mt-1">Acrylique sur toile • 70x70cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">2 000€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau15.jpg" alt="Entre terre et mer" onclick="openModal(this,1400)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Entre terre et mer</h3>
-                            <p class="text-sm mt-1">Encre sur papier • 40x40cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">900€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau29.jpg" alt="Calme après la tempête" onclick="openModal(this,2800)">
+                            </div>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Calme après la tempête</h3>
+                                <p class="text-sm mt-1">Huile sur toile • 60x80cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 850€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau16.jpg" alt="Lever de soleil sur l'horizon" onclick="openModal(this,1500)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Lever de soleil sur l'horizon</h3>
-                            <p class="text-sm mt-1">Acrylique sur toile • 60x80cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 700€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                            <div class="artwork-square-wrapper">
+                                <img src="images/tableau30.jpg" alt="Fin d'après-midi sur la plage" onclick="openModal(this,2900)">
                             </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau17.jpg" alt="Mer agitée" onclick="openModal(this,1600)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Mer agitée</h3>
-                            <p class="text-sm mt-1">Huile sur toile • 70x70cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">2 100€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau18.jpg" alt="Douceur du matin" onclick="openModal(this,1700)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Douceur du matin</h3>
-                            <p class="text-sm mt-1">Aquarelle sur papier • 45x60cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 000€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau19.jpg" alt="Rivage secret" onclick="openModal(this,1800)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Rivage secret</h3>
-                            <p class="text-sm mt-1">Encre sur papier • 50x70cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 450€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau20.jpg" alt="Montagnes et mer" onclick="openModal(this,1900)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Montagnes et mer</h3>
-                            <p class="text-sm mt-1">Acrylique sur toile • 70x90cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">2 300€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau21.jpg" alt="Calme plat" onclick="openModal(this,2000)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Calme plat</h3>
-                            <p class="text-sm mt-1">Aquarelle sur papier • 30x40cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">750€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau22.jpg" alt="Tempête en mer" onclick="openModal(this,2100)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Tempête en mer</h3>
-                            <p class="text-sm mt-1">Huile sur toile • 80x100cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">2 800€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau23.jpg" alt="Sentier fleuri au bord de l'eau" onclick="openModal(this,2200)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Sentier fleuri au bord de l'eau</h3>
-                            <p class="text-sm mt-1">Acrylique sur toile • 60x60cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 650€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau24.jpg" alt="Sous la brume" onclick="openModal(this,2300)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Sous la brume</h3>
-                            <p class="text-sm mt-1">Encre et aquarelle • 50x50cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 250€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau25.jpg" alt="Océan infini" onclick="openModal(this,2400)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Océan infini</h3>
-                            <p class="text-sm mt-1">Acrylique sur toile • 90x90cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">3 000€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau26.jpg" alt="Estuaire paisible" onclick="openModal(this,2500)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Estuaire paisible</h3>
-                            <p class="text-sm mt-1">Aquarelle sur papier • 40x60cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">980€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau27.jpg" alt="Reflets de nuages" onclick="openModal(this,2600)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Reflets de nuages</h3>
-                            <p class="text-sm mt-1">Encre sur papier • 50x50cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 300€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau28.jpg" alt="Lumière du matin sur la côte" onclick="openModal(this,2700)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Lumière du matin sur la côte</h3>
-                            <p class="text-sm mt-1">Acrylique sur toile • 70x70cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">2 000€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau29.jpg" alt="Calme après la tempête" onclick="openModal(this,2800)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Calme après la tempête</h3>
-                            <p class="text-sm mt-1">Huile sur toile • 60x80cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 850€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-slide-item artwork-hover relative cursor-pointer tableau-slide">
-                        <div class="artwork-square-wrapper">
-                            <img src="images/tableau30.jpg" alt="Fin d'après-midi sur la plage" onclick="openModal(this,2900)">
-                        </div>
-                        <div class="artwork-info">
-                            <h3 class="font-light">Fin d'après-midi sur la plage</h3>
-                            <p class="text-sm mt-1">Aquarelle sur papier • 50x70cm</p>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm">1 550€</span>
-                                <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                            <div class="artwork-info">
+                                <h3 class="font-light">Fin d'après-midi sur la plage</h3>
+                                <p class="text-sm mt-1">Aquarelle sur papier • 50x70cm</p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-sm">1 550€</span>
+                                    <a href="#" class="text-xs border-b border-black">En savoir plus</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -699,27 +703,28 @@
         const modal = document.getElementById('myModal');
         const modalImg = document.getElementById('modalImage');
         const carouselContainer = document.querySelector('.carousel-container'); // Le viewport visible
-        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper'); // Le conteneur de toutes les images
-        const carouselItems = document.querySelectorAll('.carousel-slides-wrapper .carousel-slide-item');
+        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper'); // Le conteneur de toutes les pages
+        const carouselPages = document.querySelectorAll('.carousel-page'); // Les pages de 6 images
         const prevButton = document.querySelector('.carousel-prev');
         const nextButton = document.querySelector('.carousel-next');
         const galleryImages = document.querySelectorAll('.gallery-slide');
-        const tableauImages = document.querySelectorAll('.tableau-slide');
+        const tableauSlides = document.querySelectorAll('.tableau-slide'); // Toutes les images des tableaux
 
         let currentSlidePageIndex = 0; // Index de la "page" de 6 photos visible
-        const itemsPerPage = 6; // Toujours 6 photos par page, comme demandé
+        const totalPages = carouselPages.length;
 
         function updateCarouselPosition() {
-            if (carouselItems.length === 0 || !carouselContainer) return;
+            if (carouselPages.length === 0 || !carouselContainer) return;
 
             // La largeur de défilement est la largeur du carouselContainer (le viewport)
+            // Chaque page occupe 100% de cette largeur
             const pageScrollWidth = carouselContainer.offsetWidth;
 
             carouselSlidesWrapper.style.transform = `translateX(${-currentSlidePageIndex * pageScrollWidth}px)`;
 
             // Gestion de l'affichage des boutons Précédent/Suivant
             prevButton.style.display = currentSlidePageIndex === 0 ? 'none' : 'block';
-            nextButton.style.display = (currentSlidePageIndex * itemsPerPage + itemsPerPage) >= carouselItems.length ? 'none' : 'block';
+            nextButton.style.display = currentSlidePageIndex >= (totalPages - 1) ? 'none' : 'block';
         }
 
         prevButton.addEventListener('click', () => {
@@ -728,8 +733,7 @@
         });
 
         nextButton.addEventListener('click', () => {
-            const maxPageIndex = Math.ceil(carouselItems.length / itemsPerPage) - 1;
-            currentSlidePageIndex = Math.min(maxPageIndex, currentSlidePageIndex + 1);
+            currentSlidePageIndex = Math.min(totalPages - 1, currentSlidePageIndex + 1);
             updateCarouselPosition();
         });
 
@@ -755,7 +759,7 @@
 
         // Effet d'apparition en cascade pour les images de la galerie et des tableaux
         window.addEventListener('load', () => {
-            tableauImages.forEach((img, index) => {
+            tableauSlides.forEach((img, index) => {
                 setTimeout(() => { img.classList.add('show'); }, index * 150);
             });
             galleryImages.forEach((img, index) => {
@@ -766,8 +770,7 @@
 
         window.addEventListener('resize', () => {
             // Sur redimensionnement, on s'assure que la position du carrousel est mise à jour
-            const maxPageIndex = Math.ceil(carouselItems.length / itemsPerPage) - 1;
-            currentSlidePageIndex = Math.min(maxPageIndex, currentSlidePageIndex);
+            currentSlidePageIndex = Math.min(totalPages - 1, currentSlidePageIndex);
             if (currentSlidePageIndex < 0) currentSlidePageIndex = 0;
             updateCarouselPosition();
         });
