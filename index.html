@@ -120,7 +120,6 @@
         .carousel-container {
             position: relative;
             overflow: hidden; /* Cache les images qui ne sont pas sur la "page" actuelle */
-            /* Supprimé: padding: 0 3rem; pour une meilleure gestion des boutons */
         }
         .carousel-slides-wrapper {
             display: flex;
@@ -216,7 +215,7 @@
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau1.jpg" alt="Mer calme" onclick="openModal(this,0)">
+                                <img src="images/tableau1.jpg" alt="Mer calme" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Mer calme</h3>
@@ -229,7 +228,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau2.jpg" alt="Lac au crépuscule" onclick="openModal(this,100)">
+                                <img src="images/tableau2.jpg" alt="Lac au crépuscule" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Lac au crépuscule</h3>
@@ -242,7 +241,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau3.jpg" alt="Reflets montagneux" onclick="openModal(this,200)">
+                                <img src="images/tableau3.jpg" alt="Reflets montagneux" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Reflets montagneux</h3>
@@ -255,7 +254,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau4.jpg" alt="Force de l'océan" onclick="openModal(this,300)">
+                                <img src="images/tableau4.jpg" alt="Force de l'océan" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Force de l'océan</h3>
@@ -268,7 +267,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau5.jpg" alt="Brumes matinales" onclick="openModal(this,400)">
+                                <img src="images/tableau5.jpg" alt="Brumes matinales" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Brumes matinales</h3>
@@ -281,7 +280,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau6.jpg" alt="Horizon fleuri" onclick="openModal(this,500)">
+                                <img src="images/tableau6.jpg" alt="Horizon fleuri" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Horizon fleuri</h3>
@@ -297,7 +296,7 @@
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau7.jpg" alt="Coucher de soleil sur l'océan" onclick="openModal(this,600)">
+                                <img src="images/tableau7.jpg" alt="Coucher de soleil sur l'océan" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Coucher de soleil sur l'océan</h3>
@@ -310,7 +309,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau8.jpg" alt="Falaise balayée par le vent" onclick="openModal(this,700)">
+                                <img src="images/tableau8.jpg" alt="Falaise balayée par le vent" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Falaise balayée par le vent</h3>
@@ -323,7 +322,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau9.jpg" alt="Reflets argentés" onclick="openModal(this,800)">
+                                <img src="images/tableau9.jpg" alt="Reflets argentés" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Reflets argentés</h3>
@@ -336,7 +335,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau10.jpg" alt="Matins brumeux sur le port" onclick="openModal(this,900)">
+                                <img src="images/tableau10.jpg" alt="Matins brumeux sur le port" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Matins brumeux sur le port</h3>
@@ -349,7 +348,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau11.jpg" alt="Silence des profondeurs" onclick="openModal(this,1000)">
+                                <img src="images/tableau11.jpg" alt="Silence des profondeurs" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Silence des profondeurs</h3>
@@ -362,7 +361,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau12.jpg" alt="Lumière du phare" onclick="openModal(this,1100)">
+                                <img src="images/tableau12.jpg" alt="Lumière du phare" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Lumière du phare</h3>
@@ -378,7 +377,7 @@
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau13.jpg" alt="Vagues et écume" onclick="openModal(this,1200)">
+                                <img src="images/tableau13.jpg" alt="Vagues et écume" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Vagues et écume</h3>
@@ -391,7 +390,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau14.jpg" alt="Chemin côtier" onclick="openModal(this,1300)">
+                                <img src="images/tableau14.jpg" alt="Chemin côtier" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Chemin côtier</h3>
@@ -404,7 +403,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau15.jpg" alt="Entre terre et mer" onclick="openModal(this,1400)">
+                                <img src="images/tableau15.jpg" alt="Entre terre et mer" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Entre terre et mer</h3>
@@ -417,7 +416,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau16.jpg" alt="Lever de soleil sur l'horizon" onclick="openModal(this,1500)">
+                                <img src="images/tableau16.jpg" alt="Lever de soleil sur l'horizon" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Lever de soleil sur l'horizon</h3>
@@ -430,7 +429,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau17.jpg" alt="Mer agitée" onclick="openModal(this,1600)">
+                                <img src="images/tableau17.jpg" alt="Mer agitée" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Mer agitée</h3>
@@ -443,7 +442,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau18.jpg" alt="Douceur du matin" onclick="openModal(this,1700)">
+                                <img src="images/tableau18.jpg" alt="Douceur du matin" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Douceur du matin</h3>
@@ -459,7 +458,7 @@
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau19.jpg" alt="Rivage secret" onclick="openModal(this,1800)">
+                                <img src="images/tableau19.jpg" alt="Rivage secret" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Rivage secret</h3>
@@ -472,7 +471,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau20.jpg" alt="Montagnes et mer" onclick="openModal(this,1900)">
+                                <img src="images/tableau20.jpg" alt="Montagnes et mer" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Montagnes et mer</h3>
@@ -485,7 +484,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau21.jpg" alt="Calme plat" onclick="openModal(this,2000)">
+                                <img src="images/tableau21.jpg" alt="Calme plat" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Calme plat</h3>
@@ -498,7 +497,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau22.jpg" alt="Tempête en mer" onclick="openModal(this,2100)">
+                                <img src="images/tableau22.jpg" alt="Tempête en mer" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Tempête en mer</h3>
@@ -511,7 +510,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau23.jpg" alt="Sentier fleuri au bord de l'eau" onclick="openModal(this,2200)">
+                                <img src="images/tableau23.jpg" alt="Sentier fleuri au bord de l'eau" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Sentier fleuri au bord de l'eau</h3>
@@ -524,7 +523,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau24.jpg" alt="Sous la brume" onclick="openModal(this,2300)">
+                                <img src="images/tableau24.jpg" alt="Sous la brume" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Sous la brume</h3>
@@ -540,7 +539,7 @@
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau25.jpg" alt="Océan infini" onclick="openModal(this,2400)">
+                                <img src="images/tableau25.jpg" alt="Océan infini" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Océan infini</h3>
@@ -553,7 +552,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau26.jpg" alt="Estuaire paisible" onclick="openModal(this,2500)">
+                                <img src="images/tableau26.jpg" alt="Estuaire paisible" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Estuaire paisible</h3>
@@ -561,12 +560,12 @@
                                 <div class="flex justify-between items-center mt-2">
                                     <span class="text-sm">980€</span>
                                     <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                                </div>
+                                    </div>
                             </div>
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau27.jpg" alt="Reflets de nuages" onclick="openModal(this,2600)">
+                                <img src="images/tableau27.jpg" alt="Reflets de nuages" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Reflets de nuages</h3>
@@ -579,7 +578,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau28.jpg" alt="Lumière du matin sur la côte" onclick="openModal(this,2700)">
+                                <img src="images/tableau28.jpg" alt="Lumière du matin sur la côte" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Lumière du matin sur la côte</h3>
@@ -592,7 +591,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau29.jpg" alt="Calme après la tempête" onclick="openModal(this,2800)">
+                                <img src="images/tableau29.jpg" alt="Calme après la tempête" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Calme après la tempête</h3>
@@ -605,7 +604,7 @@
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
-                                <img src="images/tableau30.jpg" alt="Fin d'après-midi sur la plage" onclick="openModal(this,2900)">
+                                <img src="images/tableau30.jpg" alt="Fin d'après-midi sur la plage" onclick="openModal(this)">
                             </div>
                             <div class="artwork-info">
                                 <h3 class="font-light">Fin d'après-midi sur la plage</h3>
@@ -630,12 +629,12 @@
         <div class="max-w-7xl mx-auto">
             <h2 class="text-2xl md:text-3xl font-light text-center mb-12">Galerie</h2>
             <div class="gallery-grid">
-                <img src="images/expo1.jpg" alt="Exposition 1" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this,0)">
-                <img src="images/expo2.jpg" alt="Exposition 2" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this,100)">
-                <img src="images/expo3.jpg" alt="Exposition 3" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this,200)">
-                <img src="images/expo4.jpg" alt="Exposition 4" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this,300)">
-                <img src="images/expo5.jpg" alt="Exposition 5" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this,400)">
-                <img src="images/expo6.jpg" alt="Exposition 6" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this,500)">
+                <img src="images/expo1.jpg" alt="Exposition 1" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this)">
+                <img src="images/expo2.jpg" alt="Exposition 2" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this)">
+                <img src="images/expo3.jpg" alt="Exposition 3" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this)">
+                <img src="images/expo4.jpg" alt="Exposition 4" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this)">
+                <img src="images/expo5.jpg" alt="Exposition 5" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this)">
+                <img src="images/expo6.jpg" alt="Exposition 6" class="w-full object-cover cursor-pointer gallery-slide" onclick="openModal(this)">
             </div>
         </div>
     </section>
@@ -714,9 +713,8 @@
         function updateCarouselPosition() {
             if (carouselPages.length === 0 || !carouselContainer || !carouselSlidesWrapper) return;
 
-            // La largeur de défilement est la largeur du carouselSlidesWrapper,
-            // car carousel-page est flex: 0 0 100% de carousel-slides-wrapper.
-            const pageScrollWidth = carouselSlidesWrapper.offsetWidth;
+            // La largeur de défilement est la largeur du carouselContainer lui-même
+            const pageScrollWidth = carouselContainer.offsetWidth;
 
             const translateX = -currentSlidePageIndex * pageScrollWidth;
             carouselSlidesWrapper.style.transform = `translateX(${translateX}px)`;
@@ -736,18 +734,20 @@
             updateCarouselPosition();
         });
 
-        function openModal(imgElement, delay) {
-            modalImg.style.transition = 'none';
+        function openModal(imgElement) { // Supprime le paramètre 'delay'
+            modalImg.style.transition = 'none'; // Réinitialise la transition
             modalImg.style.transform = 'translateX(-100vw) scale(0.8)';
             modalImg.style.opacity = '0';
             modal.classList.add('show');
 
+            // Utilisez un petit délai fixe pour permettre au navigateur d'appliquer les styles initiaux
+            // avant de déclencher la transition finale.
             setTimeout(() => {
                 modalImg.src = imgElement.src;
                 modalImg.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
                 modalImg.style.transform = 'translateX(0) scale(1)';
                 modalImg.style.opacity = '1';
-            }, delay);
+            }, 10); // Délai fixe et court de 10ms
         }
 
         function closeModal() {
