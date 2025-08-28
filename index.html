@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- Pas de meta viewport pour forcer l'affichage desktop partout -->
+    <!-- Pas de meta viewport pour fo rcer l'affichage desktop partout -->
     <title>Prototype du site de Claude Louis Moreau – Peintures maritimes</title>
     <meta property="og:title" content="Prototype du site de Claude Louis Moreau – Peintures maritimes">
     <!-- Tu peux aussi ajouter une image d'aperçu si tu veux : -->
@@ -161,6 +161,30 @@
         }
         .carousel-prev { left: 0.5rem; } /* Légèrement à l'intérieur du conteneur */
         .carousel-next { right: 0.5rem; } /* Légèrement à l'intérieur du conteneur */
+
+        /* Styles pour la pagination */
+        #carousel-pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+        .pagination-link {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #fff;
+            transition: all 0.2s ease;
+        }
+        .pagination-link:hover {
+            background-color: #eee;
+        }
+        .pagination-link.active {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
 
         /* Styles pour la galerie d'expositions (inchangés) */
         .gallery-grid {
@@ -560,7 +584,7 @@
                                 <div class="flex justify-between items-center mt-2">
                                     <span class="text-sm">980€</span>
                                     <a href="#" class="text-xs border-b border-black">En savoir plus</a>
-                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="artwork-hover relative cursor-pointer">
@@ -621,6 +645,8 @@
                 <button class="carousel-prev">❮</button>
                 <button class="carousel-next">❯</button>
             </div>
+            <!-- Nouveau : Conteneur pour la pagination des pages du carrousel -->
+            <div id="carousel-pagination"></div>
         </div>
     </section>
 
@@ -706,6 +732,7 @@
         const prevButton = document.querySelector('.carousel-prev');
         const nextButton = document.querySelector('.carousel-next');
         const galleryImages = document.querySelectorAll('.gallery-slide');
+        const carouselPagination = document.getElementById('carousel-pagination'); // Nouveau : élément de pagination
 
         let currentSlidePageIndex = 0; // Index de la "page" de 6 photos visible
         const totalPages = carouselPages.length;
@@ -713,8 +740,9 @@
         function updateCarouselPosition() {
             if (carouselPages.length === 0 || !carouselContainer || !carouselSlidesWrapper) return;
 
-            // La largeur de défilement est la largeur du carouselContainer lui-même
-            const pageScrollWidth = carouselContainer.offsetWidth;
+            // La largeur de défilement est la largeur du carouselSlidesWrapper,
+            // car carousel-page est flex: 0 0 100% de carousel-slides-wrapper.
+            const pageScrollWidth = carouselSlidesWrapper.offsetWidth;
 
             const translateX = -currentSlidePageIndex * pageScrollWidth;
             carouselSlidesWrapper.style.transform = `translateX(${translateX}px)`;
@@ -722,6 +750,27 @@
             // Gestion de l'affichage des boutons Précédent/Suivant
             prevButton.style.display = currentSlidePageIndex === 0 ? 'none' : 'block';
             nextButton.style.display = currentSlidePageIndex >= (totalPages - 1) ? 'none' : 'block';
+
+            renderPagination(); // Met à jour la pagination
+        }
+
+        function renderPagination() {
+            if (!carouselPagination) return;
+            carouselPagination.innerHTML = ''; // Vide la pagination existante
+
+            for (let i = 0; i < totalPages; i++) {
+                const pageLink = document.createElement('span');
+                pageLink.textContent = `Page ${i + 1}`;
+                pageLink.classList.add('pagination-link');
+                if (i === currentSlidePageIndex) {
+                    pageLink.classList.add('active');
+                }
+                pageLink.addEventListener('click', () => {
+                    currentSlidePageIndex = i;
+                    updateCarouselPosition();
+                });
+                carouselPagination.appendChild(pageLink);
+            }
         }
 
         prevButton.addEventListener('click', () => {
@@ -734,20 +783,18 @@
             updateCarouselPosition();
         });
 
-        function openModal(imgElement) { // Supprime le paramètre 'delay'
+        function openModal(imgElement) {
             modalImg.style.transition = 'none'; // Réinitialise la transition
             modalImg.style.transform = 'translateX(-100vw) scale(0.8)';
             modalImg.style.opacity = '0';
             modal.classList.add('show');
 
-            // Utilisez un petit délai fixe pour permettre au navigateur d'appliquer les styles initiaux
-            // avant de déclencher la transition finale.
             setTimeout(() => {
                 modalImg.src = imgElement.src;
                 modalImg.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
                 modalImg.style.transform = 'translateX(0) scale(1)';
                 modalImg.style.opacity = '1';
-            }, 10); // Délai fixe et court de 10ms
+            }, 10); // Délai fixe et court de 10ms pour une ouverture rapide
         }
 
         function closeModal() {
