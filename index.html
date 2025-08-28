@@ -13,7 +13,8 @@
 
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #f8f5f2;
+            /* Suppression de la couleur de fond du body pour laisser la vidéo apparaître */
+            background-color: transparent; 
             color: #333;
         }
         /* Styles pour la vidéo de fond globale */
@@ -25,7 +26,7 @@
             height: 100vh;
             z-index: -2; /* Place la vidéo derrière tout le contenu */
             overflow: hidden; /* Cache tout débordement de la vidéo */
-            opacity: 0.1; /* Opacité très faible pour un fond subtil */
+            opacity: 0.3; /* Opacité augmentée pour mieux la percevoir. Vous pourrez ajuster cette valeur. */
         }
         #global-background-video iframe {
             width: 100%;
@@ -37,7 +38,6 @@
             background-size: cover;
             background-position: center;
             position: relative; /* Assure le positionnement du texte par rapport à cette section */
-            /* Removed: overflow: hidden; as the video is now global */
         }
         /* Comportement du bandeau d'information : invisible par défaut, visible au survol */
         .artwork-info {
@@ -287,7 +287,7 @@
                                 <h3 class="font-light">Reflets montagneux</h3>
                                 <p class="text-sm mt-1">Encre sur papier • 60x40cm</p>
                                 <div class="flex justify-between items-center mt-2">
-                                    <span class="text-sm">1 500€€</span>
+                                    <span class="text-sm">1 500€</span>
                                     <a href="#" class="text-xs border-b border-black">En savoir plus</a>
                                 </div>
                             </div>
