@@ -5,7 +5,7 @@
     <!-- Pas de meta viewport pour forcer l'affichage desktop partout -->
     <title>Prototype du site de Claude Louis Moreau – Peintures maritimes</title>
     <meta property="og:title" content="Prototype du site de Claude Louis Moreau – Peintures maritimes">
-    <!-- Tu peux aussi ajouter une image d’aperçu si tu veux : -->
+    <!-- Tu peux aussi ajouter une image d'aperçu si tu veux : -->
     <!-- <meta property="og:image" content="https://TONSITE.com/images/hero.jpg"> -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -84,15 +84,16 @@
                 max-height: 90vh;
             }
         }
-        .gallery-slide, .tableau-slide { /* Ré-activation de tableau-slide pour les images */
+        .gallery-slide { /* Seulement pour la galerie */
             transform: translateY(50px);
             opacity: 0;
             transition: transform 0.5s ease, opacity 0.5s ease;
         }
-        .gallery-slide.show, .tableau-slide.show {
+        .gallery-slide.show {
             transform: translateY(0);
             opacity: 1;
         }
+        /* La classe tableau-slide est supprimée pour les éléments du carrousel */
         .artist-image { width: 200%; height: auto; }
         .gallery-slide:hover, .artwork-hover:hover {
             transform: scale(1.05);
@@ -125,9 +126,10 @@
         .carousel-slides-wrapper {
             display: flex;
             transition: transform 0.5s ease-in-out; /* Transition douce pour le défilement */
+            width: 500%; /* 5 pages * 100% */
         }
         .carousel-page {
-            flex: 0 0 100%; /* Chaque page prend 100% de la largeur du wrapper visible */
+            flex: 0 0 20%; /* Chaque page prend 20% de la largeur totale (100% / 5 pages) */
             display: grid;
             grid-template-columns: repeat(3, 1fr); /* 3 colonnes comme demandé */
             gap: 2rem; /* Espacement entre les images */
@@ -214,7 +216,7 @@
                 <div class="carousel-slides-wrapper">
                     <!-- Page 1 : Tableaux 1 à 6 -->
                     <div class="carousel-page">
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau1.jpg" alt="Mer calme" onclick="openModal(this,0)">
                             </div>
@@ -227,7 +229,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau2.jpg" alt="Lac au crépuscule" onclick="openModal(this,100)">
                             </div>
@@ -240,7 +242,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau3.jpg" alt="Reflets montagneux" onclick="openModal(this,200)">
                             </div>
@@ -253,7 +255,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau4.jpg" alt="Force de l'océan" onclick="openModal(this,300)">
                             </div>
@@ -266,7 +268,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau5.jpg" alt="Brumes matinales" onclick="openModal(this,400)">
                             </div>
@@ -279,7 +281,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau6.jpg" alt="Horizon fleuri" onclick="openModal(this,500)">
                             </div>
@@ -295,7 +297,7 @@
                     </div>
                     <!-- Page 2 : Tableaux 7 à 12 -->
                     <div class="carousel-page">
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau7.jpg" alt="Coucher de soleil sur l'océan" onclick="openModal(this,600)">
                             </div>
@@ -308,7 +310,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau8.jpg" alt="Falaise balayée par le vent" onclick="openModal(this,700)">
                             </div>
@@ -321,7 +323,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau9.jpg" alt="Reflets argentés" onclick="openModal(this,800)">
                             </div>
@@ -334,7 +336,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau10.jpg" alt="Matins brumeux sur le port" onclick="openModal(this,900)">
                             </div>
@@ -347,7 +349,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau11.jpg" alt="Silence des profondeurs" onclick="openModal(this,1000)">
                             </div>
@@ -360,7 +362,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau12.jpg" alt="Lumière du phare" onclick="openModal(this,1100)">
                             </div>
@@ -376,7 +378,7 @@
                     </div>
                     <!-- Page 3 : Tableaux 13 à 18 -->
                     <div class="carousel-page">
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau13.jpg" alt="Vagues et écume" onclick="openModal(this,1200)">
                             </div>
@@ -389,7 +391,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau14.jpg" alt="Chemin côtier" onclick="openModal(this,1300)">
                             </div>
@@ -402,7 +404,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau15.jpg" alt="Entre terre et mer" onclick="openModal(this,1400)">
                             </div>
@@ -415,7 +417,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau16.jpg" alt="Lever de soleil sur l'horizon" onclick="openModal(this,1500)">
                             </div>
@@ -428,7 +430,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau17.jpg" alt="Mer agitée" onclick="openModal(this,1600)">
                             </div>
@@ -441,7 +443,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau18.jpg" alt="Douceur du matin" onclick="openModal(this,1700)">
                             </div>
@@ -457,7 +459,7 @@
                     </div>
                     <!-- Page 4 : Tableaux 19 à 24 -->
                     <div class="carousel-page">
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau19.jpg" alt="Rivage secret" onclick="openModal(this,1800)">
                             </div>
@@ -470,7 +472,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau20.jpg" alt="Montagnes et mer" onclick="openModal(this,1900)">
                             </div>
@@ -483,7 +485,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau21.jpg" alt="Calme plat" onclick="openModal(this,2000)">
                             </div>
@@ -496,7 +498,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau22.jpg" alt="Tempête en mer" onclick="openModal(this,2100)">
                             </div>
@@ -509,7 +511,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau23.jpg" alt="Sentier fleuri au bord de l'eau" onclick="openModal(this,2200)">
                             </div>
@@ -522,7 +524,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau24.jpg" alt="Sous la brume" onclick="openModal(this,2300)">
                             </div>
@@ -538,7 +540,7 @@
                     </div>
                     <!-- Page 5 : Tableaux 25 à 30 -->
                     <div class="carousel-page">
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau25.jpg" alt="Océan infini" onclick="openModal(this,2400)">
                             </div>
@@ -551,7 +553,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau26.jpg" alt="Estuaire paisible" onclick="openModal(this,2500)">
                             </div>
@@ -564,7 +566,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau27.jpg" alt="Reflets de nuages" onclick="openModal(this,2600)">
                             </div>
@@ -577,7 +579,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau28.jpg" alt="Lumière du matin sur la côte" onclick="openModal(this,2700)">
                             </div>
@@ -590,7 +592,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau29.jpg" alt="Calme après la tempête" onclick="openModal(this,2800)">
                             </div>
@@ -603,7 +605,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="artwork-hover relative cursor-pointer tableau-slide">
+                        <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
                                 <img src="images/tableau30.jpg" alt="Fin d'après-midi sur la plage" onclick="openModal(this,2900)">
                             </div>
@@ -701,27 +703,24 @@
     <script>
         const modal = document.getElementById('myModal');
         const modalImg = document.getElementById('modalImage');
-        const carouselContainer = document.querySelector('.carousel-container'); // Le viewport visible
-        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper'); // Le conteneur de toutes les pages
-        const carouselPages = document.querySelectorAll('.carousel-page'); // Les pages de 6 images
+        const carouselContainer = document.querySelector('.carousel-container');
+        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper');
+        const carouselPages = document.querySelectorAll('.carousel-page');
         const prevButton = document.querySelector('.carousel-prev');
         const nextButton = document.querySelector('.carousel-next');
         const galleryImages = document.querySelectorAll('.gallery-slide');
-        const tableauSlides = document.querySelectorAll('.tableau-slide'); // Toutes les images des tableaux
 
-        let currentSlidePageIndex = 0; // Index de la "page" de 6 photos visible
+        let currentSlidePageIndex = 0;
         const totalPages = carouselPages.length;
 
         function updateCarouselPosition() {
             if (carouselPages.length === 0 || !carouselContainer) return;
 
-            // La largeur de défilement est la largeur du carouselContainer (le viewport)
-            // Chaque page occupe 100% de cette largeur
-            const pageScrollWidth = carouselContainer.offsetWidth;
+            // Calculer le pourcentage de déplacement basé sur l'index de la page
+            const translatePercent = -currentSlidePageIndex * 20; // 20% par page (5 pages = 100% / 5)
+            carouselSlidesWrapper.style.transform = `translateX(${translatePercent}%)`;
 
-            carouselSlidesWrapper.style.transform = `translateX(${-currentSlidePageIndex * pageScrollWidth}px)`;
-
-            // Gestion de l'affichage des boutons Précédent/Suivant
+            // Gestion de l'affichage des boutons
             prevButton.style.display = currentSlidePageIndex === 0 ? 'none' : 'block';
             nextButton.style.display = currentSlidePageIndex >= (totalPages - 1) ? 'none' : 'block';
         }
@@ -756,11 +755,8 @@
             setTimeout(() => modal.classList.remove('show'), 500);
         }
 
-        // Effet d'apparition en cascade pour les images de la galerie et des tableaux
+        // Effet d'apparition en cascade pour les images de la galerie
         window.addEventListener('load', () => {
-            tableauSlides.forEach((img, index) => {
-                setTimeout(() => { img.classList.add('show'); }, index * 150);
-            });
             galleryImages.forEach((img, index) => {
                 setTimeout(() => { img.classList.add('show'); }, index * 150);
             });
