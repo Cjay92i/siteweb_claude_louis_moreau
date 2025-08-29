@@ -2,58 +2,77 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- Pas de meta viewport pour forcer l'affichage desktop partout -->
     <title>Prototype du site de Claude Louis Moreau – Peintures maritimes</title>
     <meta property="og:title" content="Prototype du site de Claude Louis Moreau – Peintures maritimes">
-    <!-- Tu peux aussi ajouter une image d'aperçu si tu veux : -->
-    <!-- <meta property="og:image" content="https://TONSITE.com/images/hero.jpg"> -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
 
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            /* Suppression de la couleur de fond du body pour laisser la vidéo apparaître */
-            background-color: transparent; 
+            background-color: transparent;
             color: #333;
+            margin: 0;
         }
-        /* Styles pour la vidéo de fond globale */
         #global-background-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -2; /* Place la vidéo derrière tout le contenu */
-            overflow: hidden; /* Cache tout débordement de la vidéo */
-            opacity: 0.3; /* Opacité augmentée pour mieux la percevoir. Vous pourrez ajuster cette valeur. */
-        }
-        #global-background-video iframe {
-            width: 100%;
-            height: 100%;
-        }
-
-        .hero-image {
-            background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('images/hero.jpg'); /* Restauré */
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.3;
+            pointer-events: none;
+            background-color: transparent;
+            background-image: url('images/fallback.jpg');
             background-size: cover;
             background-position: center;
-            position: relative; /* Assure le positionnement du texte par rapport à cette section */
         }
-        /* Comportement du bandeau d'information : invisible par défaut, visible au survol */
+        #global-background-video iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 56.25vw;
+            min-height: 100vh;
+            min-width: 177.77vh;
+            transform: translate(-50%, -50%);
+            border: none;
+            background-color: transparent;
+        }
+        #video-loading {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 4px;
+            z-index: 100;
+            display: none;
+        }
+        .hero-image {
+            background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('images/hero.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            z-index: 1;
+        }
         .artwork-info {
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.9);
-            opacity: 0; /* Invisible par défaut */
-            transform: translateY(4px); /* Légèrement décalé vers le bas par défaut */
-            position: absolute; /* S'assurer qu'il est bien positionné au-dessus */
+            opacity: 0;
+            transform: translateY(4px);
+            position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 1rem; /* Ajout d'un padding pour l'esthétique */
+            padding: 1rem;
         }
         .artwork-hover:hover .artwork-info {
-            opacity: 1; /* Visible au survol */
-            transform: translateY(0); /* Remonte à sa position normale au survol */
+            opacity: 1;
+            transform: translateY(0);
         }
         .nav-link { position: relative; }
         .nav-link:after {
@@ -68,21 +87,19 @@
         }
         .nav-link:hover:after { width: 100%; }
         .cursor-pointer { cursor: pointer; }
-
-        /* Modal / Popup */
         #myModal {
             position: fixed;
-            top:0; left:0; width:100vw; height:100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: rgba(0,0,0,0.85);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            opacity:0;
-            pointer-events:none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
             transition: opacity 0.3s ease;
-            z-index:50;
+            z-index: 50;
         }
-        #myModal.show { opacity:1; pointer-events:auto; }
+        #myModal.show { opacity: 1; pointer-events: auto; }
         #modalImage {
             max-width: 90vw;
             max-height: 90vh;
@@ -93,16 +110,16 @@
             background: #fff;
             object-fit: contain;
             transition: transform 0.5s ease, opacity 0.5s ease;
-            opacity:0;
+            opacity: 0;
             display: block;
         }
-        @media (max-width:900px) {
+        @media (max-width: 900px) {
             #modalImage {
                 max-width: 98vw;
                 max-height: 90vh;
             }
         }
-        .gallery-slide { /* Seulement pour la galerie */
+        .gallery-slide {
             transform: translateY(50px);
             opacity: 0;
             transition: transform 0.5s ease, opacity 0.5s ease;
@@ -116,14 +133,12 @@
             transform: scale(1.05);
             transition: transform 0.3s ease;
         }
-        
-        /* Styles pour les images carrées (appliqués à toutes les images du carrousel) */
         .artwork-square-wrapper {
             width: 100%;
-            padding-bottom: 100%; /* Crée un ratio d'aspect carré */
+            padding-bottom: 100%;
             position: relative;
             overflow: hidden;
-            border-radius: 8px; /* Coins arrondis pour l'image */
+            border-radius: 8px;
         }
         .artwork-square-wrapper img {
             position: absolute;
@@ -133,39 +148,35 @@
             height: 100%;
             object-fit: cover;
         }
-        
-        /* Styles pour le carrousel "Tableaux disponibles" */
         .carousel-container {
             position: relative;
-            overflow: hidden; /* Cache les images qui ne sont pas sur la "page" actuelle */
+            overflow: hidden;
         }
         .carousel-slides-wrapper {
             display: flex;
-            transition: transform 0.5s ease-in-out; /* Transition douce pour le défilement */
+            transition: transform 0.5s ease-in-out;
         }
         .carousel-page {
-            flex: 0 0 100%; /* Chaque page prend 100% de la largeur du conteneur visible */
+            flex: 0 0 100%;
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 colonnes comme demandé */
-            gap: 2rem; /* Espacement entre les images */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
             box-sizing: border-box;
-            padding: 0 1rem; /* Padding interne des pages */
+            padding: 0 1rem;
         }
         .carousel-page .artwork-hover {
             position: relative;
             overflow: hidden;
-            border-radius: 8px; /* Coins arrondis pour l'image */
+            border-radius: 8px;
         }
-
-        /* Boutons de navigation du carrousel sur les côtés des photos */
         .carousel-prev, .carousel-next {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background-color: rgba(0,0,0,0.6); /* Plus visible */
+            background-color: rgba(0,0,0,0.6);
             color: white;
             border: none;
-            padding: 0.75rem 0.5rem; /* Ajuster le padding des boutons */
+            padding: 0.75rem 0.5rem;
             cursor: pointer;
             z-index: 10;
             border-radius: 4px;
@@ -177,10 +188,8 @@
         .carousel-prev:hover, .carousel-next:hover {
             background-color: rgba(0,0,0,0.8);
         }
-        .carousel-prev { left: 0.5rem; } /* Légèrement à l'intérieur du conteneur */
-        .carousel-next { right: 0.5rem; } /* Légèrement à l'intérieur du conteneur */
-
-        /* Styles pour la pagination */
+        .carousel-prev { left: 0.5rem; }
+        .carousel-next { right: 0.5rem; }
         #carousel-pagination {
             display: flex;
             justify-content: center;
@@ -191,8 +200,6 @@
         .pagination-info {
             padding: 0.5rem 1rem;
         }
-
-        /* Styles pour la galerie d'expositions (inchangés) */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr) !important;
@@ -207,18 +214,16 @@
     </style>
 </head>
 <body>
-    <!-- Nouveau : Vidéo de fond globale pour tout le site -->
     <div id="global-background-video">
-        <iframe src="https://player.vimeo.com/video/1113772146?badge=0&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-                frameborder="0"
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                title="sea1">
-        </iframe>
+        <iframe id="background-video" 
+                src="https://player.vimeo.com/video/1113772146?autoplay=1&loop=1&muted=1&background=1&controls=0&title=0&byline=0&portrait=0&transparent=0&dnt=1" 
+                allow="autoplay; fullscreen" 
+                allowfullscreen
+                frameborder="0"></iframe>
+        <div id="video-loading">Chargement de la vidéo...</div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm py-4 px-6 md:px-12 flex justify-between items-center">
+    <nav class="bg-white shadow-sm py-4 px-6 md:px-12 flex justify-between items-center" style="z-index: 2;">
         <div class="text-xl font-light tracking-wider">Le temps d'un rêve</div>
         <div class="hidden md:flex space-x-8 items-center">
             <a href="#tableaux" class="nav-link text-sm">Tableaux disponibles</a>
@@ -232,9 +237,7 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero-image h-96 flex items-center justify-center text-center text-white">
-        <!-- Contenu du bandeau Hero restauré -->
         <div class="px-4">
             <h1 class="text-4xl md:text-5xl font-light mb-4">L'essence du paysage</h1>
             <p class="text-lg md:text-xl font-light max-w-2xl mx-auto">
@@ -244,14 +247,11 @@
         </div>
     </section>
 
-    <!-- Tableaux disponibles - Un seul carrousel pour toutes les photos -->
-    <section id="tableaux" class="py-16 px-6 md:px-12 bg-white">
+    <section id="tableaux" class="py-16 px-6 md:px-12 bg-white" style="z-index: 1;">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-2xl md:text-3xl font-light text-center mb-12">Tableaux disponibles</h2>
-            
             <div class="carousel-container">
                 <div class="carousel-slides-wrapper">
-                    <!-- Page 1 : Tableaux 1 à 6 -->
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
@@ -332,7 +332,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Page 2 : Tableaux 7 à 12 -->
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
@@ -413,7 +412,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Page 3 : Tableaux 13 à 18 -->
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
@@ -494,7 +492,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Page 4 : Tableaux 19 à 24 -->
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
@@ -575,7 +572,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Page 5 : Tableaux 25 à 30 -->
                     <div class="carousel-page">
                         <div class="artwork-hover relative cursor-pointer">
                             <div class="artwork-square-wrapper">
@@ -657,17 +653,14 @@
                         </div>
                     </div>
                 </div>
-                <!-- Navigation Buttons positionnés sur les côtés des photos -->
                 <button class="carousel-prev">❮</button>
                 <button class="carousel-next">❯</button>
             </div>
-            <!-- Conteneur pour la pagination des pages du carrousel -->
             <div id="carousel-pagination"></div>
         </div>
     </section>
 
-    <!-- Galerie expositions -->
-    <section id="galerie" class="py-16 px-6 md:px-12 bg-gray-50">
+    <section id="galerie" class="py-16 px-6 md:px-12 bg-gray-50" style="z-index: 1;">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-2xl md:text-3xl font-light text-center mb-12">Galerie</h2>
             <div class="gallery-grid">
@@ -681,8 +674,7 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="a-propos" class="py-16 px-6 md:px-12 bg-white">
+    <section id="a-propos" class="py-16 px-6 md:px-12 bg-white" style="z-index: 1;">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center">
             <div class="md:w-1/6 mb-8 md:mb-0 md:pr-12">
                 <img src="images/artist.jpg" alt="Artiste au travail" class="artist-image object-cover rounded-md">
@@ -714,12 +706,11 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 px-6 md:px-12 bg-white">
+    <section id="contact" class="py-16 px-6 md:px-12 bg-white" style="z-index: 1;">
         <div class="max-w-4xl mx-auto text-center">
             <h2 class="text-2xl md:text-3xl font-light mb-12">Contactez moi</h2>
-            <p class="text-gray-700 font-light mb-4">email : jacqlaude@orange.fr</p>
-            <p class="text-gray-700 font-light mb-4">mobile : 06.21.07.31.90</p>
+            <p class="text-gray-700 font-light mb-4">email: jacqlaude@orange.fr</p>
+            <p class="text-gray-700 font-light mb-4">mobile: 06.21.07.31.90</p>
             <form class="max-w-md mx-auto space-y-4">
                 <input type="text" placeholder="Nom" class="w-full px-4 py-2 border-b border-gray-300 focus:border-black outline-none font-light">
                 <input type="email" placeholder="Email" class="w-full px-4 py-2 border-b border-gray-300 focus:border-black outline-none font-light">
@@ -729,12 +720,10 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-100 py-8 px-6 md:px-12 text-center">
+    <footer class="bg-gray-100 py-8 px-6 md:px-12 text-center" style="z-index: 1;">
         <p class="text-sm text-gray-600 font-light mb-2">© 2023 Galerie d'art maritime. Tous droits réservés.</p>
     </footer>
 
-    <!-- Modal -->
     <div id="myModal" class="cursor-pointer" onclick="closeModal()">
         <img id="modalImage">
     </div>
@@ -742,37 +731,29 @@
     <script>
         const modal = document.getElementById('myModal');
         const modalImg = document.getElementById('modalImage');
-        const carouselContainer = document.querySelector('.carousel-container'); // Le viewport visible
-        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper'); // Le conteneur de toutes les pages
-        const carouselPages = document.querySelectorAll('.carousel-page'); // Les pages de 6 images
+        const carouselContainer = document.querySelector('.carousel-container');
+        const carouselSlidesWrapper = document.querySelector('.carousel-slides-wrapper');
+        const carouselPages = document.querySelectorAll('.carousel-page');
         const prevButton = document.querySelector('.carousel-prev');
         const nextButton = document.querySelector('.carousel-next');
         const galleryImages = document.querySelectorAll('.gallery-slide');
-        const carouselPagination = document.getElementById('carousel-pagination'); // Élément de pagination
-
-        let currentSlidePageIndex = 0; // Index de la "page" de 6 photos visible
+        const carouselPagination = document.getElementById('carousel-pagination');
+        let currentSlidePageIndex = 0;
         const totalPages = carouselPages.length;
 
         function updateCarouselPosition() {
             if (carouselPages.length === 0 || !carouselContainer || !carouselSlidesWrapper) return;
-
-            // La largeur de défilement est la largeur du carouselContainer lui-même
             const pageScrollWidth = carouselContainer.offsetWidth;
-
             const translateX = -currentSlidePageIndex * pageScrollWidth;
             carouselSlidesWrapper.style.transform = `translateX(${translateX}px)`;
-
-            // Gestion de l'affichage des boutons Précédent/Suivant
             prevButton.style.display = currentSlidePageIndex === 0 ? 'none' : 'block';
             nextButton.style.display = currentSlidePageIndex >= (totalPages - 1) ? 'none' : 'block';
-
-            renderPagination(); // Met à jour la pagination
+            renderPagination();
         }
 
         function renderPagination() {
             if (!carouselPagination) return;
-            carouselPagination.innerHTML = ''; // Vide la pagination existante
-
+            carouselPagination.innerHTML = '';
             const paginationInfo = document.createElement('span');
             paginationInfo.classList.add('pagination-info');
             paginationInfo.textContent = `Page ${currentSlidePageIndex + 1} sur ${totalPages}`;
@@ -790,17 +771,16 @@
         });
 
         function openModal(imgElement) {
-            modalImg.style.transition = 'none'; // Réinitialise la transition
+            modalImg.style.transition = 'none';
             modalImg.style.transform = 'translateX(-100vw) scale(0.8)';
             modalImg.style.opacity = '0';
             modal.classList.add('show');
-
             setTimeout(() => {
                 modalImg.src = imgElement.src;
                 modalImg.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
                 modalImg.style.transform = 'translateX(0) scale(1)';
                 modalImg.style.opacity = '1';
-            }, 10); // Délai fixe et court de 10ms pour une ouverture rapide
+            }, 10);
         }
 
         function closeModal() {
@@ -809,27 +789,61 @@
             setTimeout(() => modal.classList.remove('show'), 500);
         }
 
-        // Effet d'apparition en cascade pour les images de la galerie (inchangé)
         window.addEventListener('load', () => {
             galleryImages.forEach((img, index) => {
                 setTimeout(() => { img.classList.add('show'); }, index * 150);
             });
-            
-            // Attendre un court instant pour s'assurer que le DOM est stable
-            // avant d'initialiser le carrousel.
             setTimeout(() => {
                 updateCarouselPosition();
             }, 100);
+
+            // Vimeo iframe debugging
+            const backgroundContainer = document.getElementById('global-background-video');
+            const backgroundVideo = document.getElementById('background-video');
+            const loadingIndicator = document.getElementById('video-loading');
+
+            if (backgroundVideo) {
+                loadingIndicator.style.display = 'block';
+                console.log('Attempting to load Vimeo iframe from:', backgroundVideo.src);
+                console.log('Is file protocol?', window.location.protocol === 'file:');
+                backgroundVideo.addEventListener('load', () => {
+                    console.log('Vimeo iframe loaded successfully');
+                    loadingIndicator.style.display = 'none';
+                });
+                // Check visibility after 5 seconds
+                setTimeout(() => {
+                    if (!backgroundVideo.offsetHeight) {
+                        console.warn('Vimeo iframe not visible after 5 seconds', {
+                            offsetHeight: backgroundVideo.offsetHeight,
+                            src: backgroundVideo.src
+                        });
+                        loadingIndicator.textContent = 'Erreur: Vidéo Vimeo non visible';
+                        loadingIndicator.style.display = 'block';
+                    } else {
+                        console.log('Vimeo iframe container visible, dimensions:', backgroundContainer.offsetWidth, 'x', backgroundContainer.offsetHeight);
+                        loadingIndicator.style.display = 'none';
+                    }
+                }, 5000);
+                // Error handling for iframe
+                window.addEventListener('error', (e) => {
+                    if (e.target === backgroundVideo) {
+                        console.error('Vimeo iframe failed to load:', e);
+                        loadingIndicator.textContent = 'Erreur: Vidéo Vimeo non chargée';
+                        loadingIndicator.style.display = 'block';
+                    }
+                }, true);
+            } else {
+                console.error('Vimeo iframe element not found in DOM');
+                loadingIndicator.textContent = 'Erreur: Élément iframe manquant';
+                loadingIndicator.style.display = 'block';
+            }
         });
 
         window.addEventListener('resize', () => {
-            // Sur redimensionnement, on s'assure que la position du carrousel est mise à jour
             currentSlidePageIndex = Math.min(totalPages - 1, currentSlidePageIndex);
             if (currentSlidePageIndex < 0) currentSlidePageIndex = 0;
             updateCarouselPosition();
         });
-
     </script>
-
 </body>
 </html>
